@@ -28,6 +28,8 @@ jobs:
           python-version: '3.12'
       - name: Run tests
         run: python -m unittest discover -s tests -v
+      - name: Check browser JavaScript syntax
+        run: node --check public/app.js && node --check public/waitlist-config.js
       - name: Collect official data
         run: python scripts/collect.py --days 30
       - name: Commit updated public data
