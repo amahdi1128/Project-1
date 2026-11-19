@@ -41,7 +41,7 @@
     </section>
 
     <section class="dashboard-section" id="permits"><div class="container">
-      <div class="section-top"><div><span class="overline">THE SIGNAL BOARD</span><h2>A clearer view of the pipeline.</h2><p>Sort, filter, and export public permits for free—no account or paywall.</p></div><div class="source-indicator"><span class="tiny-pulse"></span><span id="update-status">Loading data...</span></div></div>
+      <div class="section-top"><div><span class="overline">THE SIGNAL BOARD</span><h2>A clearer view of the pipeline.</h2><p>Sort, filter, and export public permits for free—no account or paywall.</p></div><div class="source-indicator"><span class="tiny-pulse"></span><span id="update-status" role="status">Loading data...</span></div></div>
       <div id="demo-banner" class="demo-banner" role="status" hidden><strong>Preview mode:</strong> The records below are fictional examples, not actual city permits. The automated collector replaces them with official data after deployment.</div>
       <div id="error-banner" class="error-banner" role="alert" hidden></div>
       <div class="stats-grid">
@@ -65,11 +65,12 @@
           <label><span>MINIMUM VALUE</span><select id="min-cost"><option value="0">Any value</option><option value="10000">$10,000+</option><option value="50000">$50,000+</option><option value="100000">$100,000+</option><option value="500000">$500,000+</option></select></label>
           <label><span>WARD</span><select id="ward"><option value="">All wards</option></select></label>
         </div>
-        <div class="result-meta"><span id="result-count">Loading records...</span><span id="sorting-label">Sorted newest first · Statewide Delaware rows are year-only; Sussex rows have issue dates</span></div>
-        <div class="table-wrap"><table><thead><tr><th>DATE / YEAR</th><th>LOCATION / DESCRIPTION</th><th>CATEGORY</th><th>REPORTED COST</th><th>SOURCE</th></tr></thead><tbody id="rows"></tbody></table></div>
+        <div class="result-meta"><span id="result-count" role="status">Loading records...</span><span id="sorting-label">Sorted newest first · Statewide Delaware rows are year-only; Sussex rows have issue dates</span></div>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Permit results table"><table><thead><tr><th>DATE / YEAR</th><th>LOCATION / DESCRIPTION</th><th>CATEGORY</th><th>REPORTED COST</th><th>SOURCE</th></tr></thead><tbody id="rows"></tbody></table></div>
         <div id="empty-state" class="empty-state" hidden>No matching permits. Adjust the filters and try again.</div>
         <div class="pagination"><button id="prev-page" class="page-button" type="button" disabled>← Previous</button><span id="page-label">Page 1</span><button id="next-page" class="page-button" type="button" disabled>Next →</button></div>
       </div>
+      <details class="small-note"><summary>Feed refresh dates (UTC)</summary><ul id="feed-freshness"></ul></details>
       <p class="small-note">Sources: <a href="https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu" target="_blank" rel="noopener noreferrer">Chicago</a>, <a href="https://opendata.dc.gov/datasets/DCGIS::building-permits-in-last-30-days" target="_blank" rel="noopener noreferrer">D.C.</a>, <a href="https://data.phila.gov/visualizations/li-building-permits/" target="_blank" rel="noopener noreferrer">Philadelphia</a>, <a href="https://stateplanning.delaware.gov/development-trends/index.shtml" target="_blank" rel="noopener noreferrer">Delaware</a>. Coverage differs by region. Delaware blends recent Sussex County permit dates with statewide annual permit-location trends. Coverage and timestamps differ. The collector may retain old data when a source fails. BuildThePulse is unaffiliated with these governments.</p>
     </div></section>
 
@@ -103,7 +104,7 @@
       <input type="hidden" name="requested_plan" value="not_sure">
       <label class="checkbox-label"><input type="checkbox" name="consent_to_contact" value="yes" required><span>I agree to receive occasional BuildThePulse emails about the free digest and product updates. I may unsubscribe at any time.</span></label>
       <input type="text" name="website" class="honeypot" aria-hidden="true" tabindex="-1" autocomplete="off">
-      <button class="button primary full" type="submit">Join the free updates interest list →</button>
+      <button class="button primary full" type="submit" disabled>Join the free updates interest list →</button>
       <p class="form-state" id="form-state" role="status" aria-live="polite">No payment required. This is an interest list, not a functioning automatic newsletter yet.</p>
       <p class="small-note">We store your email, trade and optional company to contact you about free updates. <a href="./privacy.html">Privacy notice</a>.</p>
     </form></section>
@@ -120,7 +121,7 @@
     <a href="./privacy.html">Read privacy policy</a>
   </div>
 </div>
-<div id="privacy-modal" class="privacy-modal" role="dialog" aria-modal="true" aria-label="Privacy preferences" aria-hidden="true" hidden>
+<dialog id="privacy-modal" class="privacy-modal" role="dialog" aria-modal="true" aria-label="Privacy preferences" aria-hidden="true" hidden>
   <div class="privacy-modal-panel">
     <h2>Privacy preferences</h2>
     <p>You can allow or reject optional first-party aggregate audience analytics. When allowed, BuildThePulse records page views, selected markets and sponsor clicks without storing IP addresses, persistent IDs or emails in its analytics database. No third-party ad tags or session recording tools are currently installed.</p>
@@ -129,6 +130,6 @@
     <p id="privacy-status" role="status"></p>
     <div class="privacy-actions"><button id="privacy-save" class="privacy-primary" type="button">Save choices</button><button id="privacy-close" type="button">Close</button><a href="./privacy.html#rights">Privacy rights</a></div>
   </div>
-</div>
+</dialog>
 </body>
 </html>

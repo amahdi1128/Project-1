@@ -62,7 +62,7 @@
 </section>
 <section id="requests"><h2>6. Submit a privacy rights request</h2>
 <p>You may submit a request to access, correct or delete data, opt out, or raise another privacy concern using this private request form. It is not a public comment board. We will assess the request, verify identity when needed, and respond in accordance with applicable timelines. An automated on-screen acknowledgment only means the request was stored, not that identity verification or substantive processing has been completed.</p>
-<form id="privacy-request-form" class="rights-form">
+<form id="privacy-request-form" method="post" class="rights-form">
 <label>Email address for response <input type="email" name="email" maxlength="254" autocomplete="email" required></label>
 <label>Request type <select name="request_type" required>
 <option value="access">Access / know / portability</option>
@@ -75,7 +75,7 @@
 <label>State, province or country (optional) <input type="text" name="jurisdiction" maxlength="80" placeholder="e.g., California"></label>
 <label>Additional details (optional; do not include sensitive information) <textarea name="details" maxlength="1000" placeholder="Briefly describe your request"></textarea></label>
 <input type="text" class="honeypot" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-<button type="submit">Submit privacy request</button>
+<button type="submit" disabled>Submit privacy request</button>
 <p id="privacy-request-status" role="status" aria-live="polite"></p>
 </form>
 <p>For concerns about public permit-record accuracy, please use the corresponding municipal data source; BuildThePulse does not issue or amend government permits.</p>

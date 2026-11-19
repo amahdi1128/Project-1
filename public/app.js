@@ -191,6 +191,15 @@ async function start() {
     state.items.push(...result.data.items.map(item=>({...item,market:displayMarket,scope:result.data.meta.scope || ''})));
   }
   state.items.sort((a,b)=>b.issue_date.localeCompare(a.issue_date));
+  const freshness = $('feed-freshness');
+  for (const [market, data] of Object.entries(state.feeds)) {
+    const retrieved = Date.parse(data.meta.retrieved_at);
+    const date = Number.isFinite(retrieved)
+      ? new Date(retrieved).toISOString().slice(0, 10) : 'unknown';
+    const delayed = ['chicago', 'dc', 'philadelphia', 'sussex'].includes(market)
+      && Date.now() - retrieved > 3 * 86400000;
+    freshness.append(el('li', '', `${MARKETS[market]}: ${date}${delayed ? ' (refresh delayed)' : ''}`));
+  }
   const failed = state.failures.map(m=>MARKETS[m]).join(', ');
   if (failed) {
     $('error-banner').hidden=false;

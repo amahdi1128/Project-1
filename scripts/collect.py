@@ -16,6 +16,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+from pagination import iter_rows
+
 BASE = 'https://data.cityofchicago.org/resource/ydr8-5enu.json'
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'public' / 'data' / 'permits.json'
@@ -54,6 +56,10 @@ def normalize(raw: dict) -> dict | None:
     issue = str(raw.get('issue_date') or '')[:10]
     if not ident or not re.fullmatch(r'\d{4}-\d{2}-\d{2}', issue):
         return None
+    try:
+        dt.date.fromisoformat(issue)
+    except ValueError:
+        return None
     work = str(raw.get('work_description') or '').strip()
     address = ' '.join(str(raw.get(k) or '').strip() for k in ('street_number', 'street_direction', 'street_name'))
     address = re.sub(r'\s+', ' ', address).strip()
@@ -91,24 +97,21 @@ def collect(days: int = 30, limit: int = 8000) -> dict:
     now = dt.datetime.now(dt.timezone.utc)
     cutoff = (now - dt.timedelta(days=days)).date().isoformat()
     entries: dict[str,dict] = {}
-    page = 1000
-    for offset in range(0, limit, page):
+    def fetch_page(offset, size):
         params = urllib.parse.urlencode({
             '$select': FIELDS,
             '$where': f"issue_date >= '{cutoff}T00:00:00'",
-            '$order': 'issue_date DESC, permit_ DESC',
-            '$limit': min(page, limit - offset),
+            '$order': 'issue_date DESC, permit_ DESC, id DESC',
+            '$limit': size,
             '$offset': offset,
         })
         batch = fetch_json(BASE + '?' + params)
-        for raw in batch:
-            item = normalize(raw)
-            if item:
-                entries[item['id']] = item
-        if len(batch) < page:
-            break
-    else:
-        raise RuntimeError(f'Hit {limit}-row safety cap. Increase --limit to avoid publishing a truncated feed.')
+        return batch, len(batch) == size
+
+    for raw in iter_rows(fetch_page, limit=limit):
+        item = normalize(raw)
+        if item and cutoff <= item['issue_date'] <= now.date().isoformat():
+            entries.setdefault(item['id'], item)
     if not entries:
         raise RuntimeError('Received zero valid permits. Refusing to replace existing data.')
     records = sorted(entries.values(), key=lambda x: (x['issue_date'], x['id']), reverse=True)

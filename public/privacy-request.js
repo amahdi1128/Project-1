@@ -31,4 +31,5 @@ document.addEventListener('DOMContentLoaded', () => {
       status.textContent='Your request was not confirmed. Please try again. (' + String(error.message || error) + ')';
     } finally {clearTimeout(timeout);if(button)button.disabled=false;}
   });
+  form.querySelector('button[type=submit]').disabled = false;
 });

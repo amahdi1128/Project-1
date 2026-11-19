@@ -1,10 +1,10 @@
+import { readSubmission, submissionErrors } from '../_shared/request.ts';
+
 // BuildThePulse free bulletin interest endpoint — deploy as a Supabase Edge Function.
 // No service-role or secret key should ever be embedded in the website.
 const ORIGINS = new Set([
   'https://buildthepulse.onrender.com',
   'https://buildpulse-chicago.onrender.com',
-  'http://localhost:8000',
-  'http://127.0.0.1:8000',
 ]);
 const TRADES = new Set([
   'All trades','Roofing','HVAC','Plumbing','Electrical','Windows & Doors',
@@ -30,19 +30,11 @@ Deno.serve(async (request) => {
   if (!ORIGINS.has(origin)) return new Response('Forbidden', { status: 403 });
   if (request.method === 'OPTIONS') return reply({ ok: true }, 200, origin);
   if (request.method !== 'POST') return reply({ ok: false, error: 'Method not allowed.' }, 405, origin);
-  if (Number(request.headers.get('content-length') || 0) > 8192) {
-    return reply({ ok: false, error: 'Request too large.' }, 413, origin);
+  const submission = await readSubmission(request, 8192);
+  if ('status' in submission) {
+    return reply({ ok: false, error: submissionErrors[submission.status] }, submission.status, origin);
   }
-
-  let body: Record<string, unknown>;
-  try {
-    const raw = await request.text();
-    if (raw.length > 8192) return reply({ ok: false, error: 'Request too large.' }, 413, origin);
-    body = JSON.parse(raw);
-    if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error('invalid');
-  } catch {
-    return reply({ ok: false, error: 'Invalid submission.' }, 400, origin);
-  }
+  const { body: body } = submission;
   // Passive anti-bot trap. Add rate limiting and CAPTCHA if spam grows.
   if (String(body.website || '').trim()) return reply({ ok: true }, 200, origin);
 

@@ -26,7 +26,7 @@ Collectors: `scripts/collect.py`, `scripts/collect_markets.py`, `scripts/collect
 ## Audience measurement (privacy-conscious and free-tier)
 
 - `public/growth.js` records `page_view`, `market_select` and `sponsor_click` events only after the visitor consents.
-- Global Privacy Control / Do Not Track are treated as an opt-out. Previous experimental privacy preferences are not reused as permission for analytics; a new v2 preference is required.
+- Global Privacy Control / Do Not Track are treated as an opt-out. Previous experimental privacy preferences are not reused as permission for analytics; a new v3 preference is required.
 - Event rows contain **event type, market, page category, sponsor placement and timestamp**, with no visitor identifier, IP address, user agent, referrer or email in the analytics table.
 - This measures **consenting event counts, not unique visitors, impressions delivered by Google, or guaranteed advertiser conversions**. Host infrastructure may separately log IP information.
 - Data is stored privately in `public.buildthepulse_analytics_events`. Use `reporting/metrics.sql` in the Supabase SQL editor for private reports.
@@ -74,3 +74,20 @@ GitHub, Render Static Sites and Supabase currently use free tiers, subject to us
 - Sussex County: https://map.sussexcountyde.gov/trdserver/rest/services/Permit_Points/FeatureServer/0
 
 BuildThePulse is not affiliated with these governments. Permits may be delayed, amended or incomplete, and are not evidence of open construction bids.
+
+## Review checks
+
+Use Python 3.12 and Node.js 24. The [technical audit](docs/technical-audit.md)
+tracks findings, priorities, and the collector adapter contract.
+
+```bash
+npm ci
+python3 -m unittest discover -s tests -v
+npm test
+npx playwright install chromium
+npm run test:browser
+```
+
+Browser tests run against a local static server and intercept external requests.
+Edge-handler tests use an in-process fake database fetch. The test suite requires
+no Supabase credentials and submits no production records.

@@ -1,19 +1,18 @@
-name: Refresh Chicago permits
+name: Refresh permit feeds
 
 on:
   schedule:
     - cron: '18 13 * * *'
   workflow_dispatch:
   push:
+    branches: [main]
     paths:
       - '.github/workflows/daily.yml'
-      - 'scripts/collect.py'
-      - 'scripts/collect_markets.py'
-      - 'scripts/collect_sussex.py'
-      - 'tests/test_collect.py'
+      - 'scripts/**'
+      - 'tests/test_collect*.py'
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: buildpulse-permit-refresh
@@ -21,6 +20,9 @@ concurrency:
 
 jobs:
   refresh:
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -32,10 +34,22 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Check browser JavaScript syntax
         run: node --check public/app.js && node --check public/waitlist-config.js && node --check public/privacy-controls.js && node --check public/privacy-request.js && node --check public/growth.js && node --check public/advertise.js
-      - name: Collect official data
+      - name: Collect Chicago data
+        id: chicago
+        continue-on-error: true
         run: python scripts/collect.py --days 30
-      - name: Collect D.C. Philadelphia and Delaware feeds
-        run: python scripts/collect_markets.py --days 30
+      - name: Collect D.C. data
+        id: dc
+        continue-on-error: true
+        run: python scripts/collect_markets.py --market dc --days 30
+      - name: Collect Philadelphia data
+        id: philadelphia
+        continue-on-error: true
+        run: python scripts/collect_markets.py --market philadelphia --days 30
+      - name: Collect Delaware data
+        id: delaware
+        continue-on-error: true
+        run: python scripts/collect_markets.py --market delaware
       - name: Collect recent Sussex County permits (optional feed)
         continue-on-error: true
         run: python scripts/collect_sussex.py
@@ -56,3 +70,8 @@ jobs:
             echo 'Could not publish data after 3 attempts' >&2
             exit 1
           fi
+      - name: Report failed required feeds
+        if: ${{ always() && (steps.chicago.outcome == 'failure' || steps.dc.outcome == 'failure' || steps.philadelphia.outcome == 'failure' || steps.delaware.outcome == 'failure') }}
+        run: |
+          echo "::error::One or more required feeds failed. Review the collector logs. Prior files are retained for failed feeds."
+          exit 1

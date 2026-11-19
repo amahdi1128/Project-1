@@ -1,11 +1,11 @@
+import { readSubmission, submissionErrors } from '../_shared/request.ts';
+
 // BuildThePulse free advertising prototype: private advertiser inquiries and
 // opt-in aggregate audience events. No IP, user-agent, email or cookies
 // are stored in the analytics table. Public endpoint: validate every field.
 const ORIGINS = new Set([
   'https://buildthepulse.onrender.com',
   'https://buildpulse-chicago.onrender.com',
-  'http://localhost:8000',
-  'http://127.0.0.1:8000',
 ]);
 const MARKETS = new Set(['all','chicago','dc','philadelphia','delaware']);
 const PLACEMENTS = new Set(['market','trade','newsletter','other']);
@@ -36,14 +36,11 @@ Deno.serve(async(request:Request)=>{
   if(!ORIGINS.has(origin)) return new Response('Forbidden',{status:403});
   if(request.method==='OPTIONS') return respond({ok:true},200,origin);
   if(request.method!=='POST') return respond({ok:false,error:'Method not allowed.'},405,origin);
-  let body:Record<string,unknown>;
-  try {
-    const raw=await request.text();
-    if(raw.length>4096) return respond({ok:false,error:'Request too large.'},413,origin);
-    const parsed=JSON.parse(raw);
-    if(!parsed||typeof parsed!=='object'||Array.isArray(parsed)) throw Error('Bad payload');
-    body=parsed;
-  } catch { return respond({ok:false,error:'Invalid submission.'},400,origin); }
+  const submission = await readSubmission(request, 4096);
+  if ('status' in submission) {
+    return respond({ ok: false, error: submissionErrors[submission.status] }, submission.status, origin);
+  }
+  const { body: body } = submission;
   if(String(body.website_trap||'').trim()) return respond({ok:true},200,origin);
 
   let table:string;
@@ -72,9 +69,9 @@ Deno.serve(async(request:Request)=>{
     const event_type=String(body.event_type||'');
     const market=String(body.market||'all');
     const path=String(body.path||'/');
-    const placement=String(body.placement||'').slice(0,48);
+    const placement=body.placement ?? '';
     if(!EVENTS.has(event_type)||!MARKETS.has(market)||!PATHS.has(path)||
-       (event_type==='sponsor_click' && !placement)) {
+       (event_type==='sponsor_click' ? placement !== market : placement !== '')) {
       return respond({ok:false,error:'Invalid event.'},400,origin);
     }
     table='buildthepulse_analytics_events';
