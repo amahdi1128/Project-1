@@ -6,6 +6,7 @@
   <meta name="description" content="BuildPulse Chicago tracks official building permit activity and helps contractors discover potential projects by trade, neighborhood, and reported cost.">
   <title>BuildPulse — Chicago construction intelligence</title>
   <link rel="stylesheet" href="./styles.css">
+  <script src="./waitlist-config.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
@@ -75,7 +76,20 @@
       </div>
     </div></section>
 
-    <section class="waitlist container" id="early-access"><div><span class="overline">HELP SHAPE THE PRODUCT</span><h2>Tell us which projects matter.</h2><p>Interested in automated trade alerts? Join the research waitlist. No payment required and no paid subscription will begin automatically.</p></div><form id="waitlist-form" class="waitlist-form"><label><span>WORK EMAIL</span><input type="email" name="email" placeholder="you@company.com" required></label><label><span>YOUR TRADE</span><select name="trade"><option>All trades</option><option>Roofing</option><option>HVAC</option><option>Plumbing</option><option>Electrical</option><option>Windows &amp; Doors</option><option>Concrete</option><option>Demolition</option><option>New Construction</option><option>Renovation</option></select></label><input type="text" name="website" class="honeypot" aria-hidden="true" tabindex="-1" autocomplete="off"><button class="button primary full" type="submit">Join early access →</button><p class="form-state" id="form-state" role="status">Waitlist submissions become active after the free database is configured.</p></form></section>
+    <section class="waitlist container" id="early-access"><div><span class="overline">HELP SHAPE THE PRODUCT</span><h2>Tell us which projects matter.</h2><p>Interested in automated trade alerts? Join the research waitlist. No payment required and no paid subscription will begin automatically.</p></div><form id="waitlist-form" class="waitlist-form">
+      <label><span>WORK EMAIL</span><input type="email" name="email" placeholder="you@company.com" autocomplete="email" maxlength="254" required></label>
+      <label><span>YOUR TRADE</span><select name="trade"><option>All trades</option><option>Roofing</option><option>HVAC</option><option>Plumbing</option><option>Electrical</option><option>Windows &amp; Doors</option><option>Concrete</option><option>Demolition</option><option>New Construction</option><option>Renovation</option></select></label>
+      <label><span>COMPANY (OPTIONAL)</span><input type="text" name="company" autocomplete="organization" maxlength="120" placeholder="Company name"></label>
+      <label><span>WHAT WOULD A USEFUL ALERT SERVICE BE WORTH TO YOU?</span><select name="requested_plan" required>
+        <option value="not_sure">Not sure yet</option><option value="no">I would only use a free version</option><option value="19">$19/month</option><option value="39">$39/month</option><option value="79">$79/month</option><option value="99_plus">$99+/month</option>
+      </select></label>
+      <label class="checkbox-label"><input type="checkbox" name="wants_pilot" value="yes"><span>I'd consider testing a paid pilot if it solves my problem.</span></label>
+      <label class="checkbox-label"><input type="checkbox" name="consent_to_contact" value="yes" required><span>BuildPulse may email me about this research and early-access pilot. I can opt out at any time.</span></label>
+      <input type="text" name="website" class="honeypot" aria-hidden="true" tabindex="-1" autocomplete="off">
+      <button class="button primary full" type="submit">Join the research waitlist →</button>
+      <p class="form-state" id="form-state" role="status">Research signup is not active yet.</p>
+      <p class="small-note">We collect only the details above to assess interest and contact volunteers about BuildPulse. No payment is requested or taken. <a href="./privacy.html">Privacy notice</a>.</p>
+    </form></section>
   </main>
   <footer><div class="container footer"><div class="brand">▥ Build<span class="brand-accent">Pulse</span></div><p>Unofficial project-monitoring tool. Public data © its respective publisher. No affiliation with the City of Chicago.</p><a href="https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu" target="_blank" rel="noopener noreferrer">Official source ↗</a></div></footer>
 </body>
