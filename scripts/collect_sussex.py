@@ -24,6 +24,7 @@ OUT = ROOT / "public" / "data" / "sussex.json"
 def collect(days: int = 45, limit: int = 15000):
     now = dt.datetime.now(dt.timezone.utc)
     cutoff = (now - dt.timedelta(days=days)).date().isoformat()
+    latest_allowed = (now + dt.timedelta(days=1)).date().isoformat()
     results = {}
     page = 1000
     have_older = False
@@ -40,7 +41,7 @@ def collect(days: int = 45, limit: int = 15000):
         for feature in features:
             row = feature.get("attributes", {})
             issued = date_string(row.get("pt_p_issue_date"))
-            if not issued or issued < cutoff:
+            if not issued or issued < cutoff or issued > latest_allowed:
                 have_older = True
                 continue
             ident = str(row.get("pt_a_permit_no") or row.get("OBJECTID") or "").strip()
