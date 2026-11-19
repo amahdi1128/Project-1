@@ -1,3 +1,5 @@
+import { readSubmission, submissionErrors } from '../_shared/request.ts';
+
 // Privacy-rights request inbox for BuildThePulse. No public table reads.
 // Entries are unverified pending identity checks by the operator.
 const ORIGINS = new Set(['https://buildthepulse.onrender.com','https://buildpulse-chicago.onrender.com']);
@@ -14,13 +16,11 @@ Deno.serve(async req => {
   if(!ORIGINS.has(origin)) return new Response('Forbidden',{status:403});
   if(req.method==='OPTIONS') return answer({ok:true},200,origin);
   if(req.method!=='POST') return answer({ok:false,error:'Method not allowed'},405,origin);
-  let data:Record<string,unknown>;
-  try {
-    const raw=await req.text();
-    if(raw.length>4000) return answer({ok:false,error:'Request too large'},413,origin);
-    data=JSON.parse(raw);
-    if(!data || typeof data!=='object' || Array.isArray(data)) throw Error('Invalid data');
-  } catch {return answer({ok:false,error:'Invalid request'},400,origin);}
+  const submission = await readSubmission(req, 4000);
+  if ('status' in submission) {
+    return answer({ ok: false, error: submissionErrors[submission.status] }, submission.status, origin);
+  }
+  const { body: data } = submission;
   if(String(data.website||'')) return answer({ok:true},200,origin);
   const email=String(data.email||'').trim().toLowerCase();
   const request_type=String(data.request_type||'');

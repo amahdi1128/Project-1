@@ -1,7 +1,7 @@
 /* BuildThePulse privacy controls. Optional first-party audience measurement only after consent; no third-party ad tags installed. */
 (() => {
   'use strict';
-  const KEY = 'buildthepulse_privacy_choice_v2';
+  const KEY = 'buildthepulse_privacy_choice_v3';
   const gpc = navigator.globalPrivacyControl === true || navigator.doNotTrack === '1';
   const banner = document.getElementById('privacy-banner');
   const modal = document.getElementById('privacy-modal');
@@ -11,7 +11,7 @@
   function read() {
     try {
       const data = JSON.parse(localStorage.getItem(KEY) || 'null');
-      return data && data.version === 2 ? data : null;
+      return data && data.version === 3 && typeof data.optional === 'boolean' ? data : null;
     } catch { return null; }
   }
   function effective(data) {
@@ -33,24 +33,27 @@
     document.dispatchEvent(new CustomEvent('buildthepulse:privacychange',{detail:{analyticsAllowed:effective(data)}}));
   }
   function save(optional) {
-    const record = {version: 2, optional: !gpc && optional === true, updatedAt: new Date().toISOString()};
+    const record = {version: 3, optional: !gpc && optional === true, updatedAt: new Date().toISOString()};
     try { localStorage.setItem(KEY, JSON.stringify(record)); } catch { /* storage denied */ }
     apply(record);
     closeModal();
   }
+  let trigger;
   function openModal() {
-    if (!modal) return;
+    if (!modal || modal.open) return;
+    trigger = document.activeElement;
     modal.hidden = false;
+    modal.showModal();
     modal.setAttribute('aria-hidden', 'false');
-    const first = document.getElementById('privacy-optional');
-    if (first) first.focus();
+    (gpc ? document.getElementById('privacy-close') : analyticsBox)?.focus();
   }
   function closeModal() {
-    if (!modal) return;
+    if (!modal?.open) return;
+    modal.close();
     modal.hidden = true;
     modal.setAttribute('aria-hidden', 'true');
-    const trigger = document.getElementById('privacy-settings-button');
-    if (trigger) trigger.focus();
+    if (trigger && trigger !== document.body && !trigger.closest('[hidden]')) trigger.focus();
+    else document.getElementById('privacy-settings-button')?.focus();
   }
   document.getElementById('privacy-reject')?.addEventListener('click', () => save(false));
   document.getElementById('privacy-accept')?.addEventListener('click', () => save(true));
@@ -61,7 +64,16 @@
   document.getElementById('privacy-modal')?.addEventListener('click', (event) => {
     if (event.target === modal) closeModal();
   });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal && !modal.hidden) closeModal(); });
+  modal?.addEventListener('cancel', event => {
+    event.preventDefault();
+    closeModal();
+  });
+  window.addEventListener('storage', event => {
+    if (event.key === KEY || event.key === null) apply(read());
+  });
+  window.addEventListener('pageshow', event => {
+    if (event.persisted) apply(read());
+  });
   if (analyticsBox && gpc) { analyticsBox.checked = false; analyticsBox.disabled = true; }
   if (gpc && !read()) save(false);
   else apply(read());

@@ -11,12 +11,12 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
-from pathlib import Path
 import time
 import urllib.parse
 import urllib.request
 
-from collect import ROOT, atomic_write, classify, safe_cost
+from collect import ROOT, atomic_write, classify
+from pagination import iter_rows
 
 DATA = ROOT / "public" / "data"
 DC = "https://maps2.dcgis.dc.gov/dcgis/rest/services/FEEDS/DCRA/FeatureServer/4"
@@ -45,7 +45,7 @@ def get_json(base: str, params: dict) -> dict:
             with urllib.request.urlopen(req, timeout=45) as response:
                 payload = json.load(response)
             if not isinstance(payload, dict) or "error" in payload:
-                raise ValueError(f"API error: {str(payload.get('error', payload))[:350]}")
+                raise ValueError("Unexpected permit API payload")
             return payload
         except (OSError, ValueError) as exc:
             error = exc
@@ -54,40 +54,45 @@ def get_json(base: str, params: dict) -> dict:
     raise RuntimeError(f"{base} failed: {error}")
 
 
-def date_string(v):
-    if isinstance(v, (int, float)):
-        return dt.datetime.fromtimestamp(v / 1000, tz=dt.timezone.utc).date().isoformat()
-    if v:
-        return str(v)[:10]
+def date_string(value):
+    try:
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            return dt.datetime.fromtimestamp(value / 1000, tz=dt.timezone.utc).date().isoformat()
+        if isinstance(value, str) and len(value) >= 10:
+            return dt.date.fromisoformat(value[:10]).isoformat()
+    except (ValueError, OverflowError, OSError):
+        pass
     return ""
 
 
-def arcgis_rows(base, where, order, limit=5000):
-    rows = []
-    page = 1000
-    for offset in range(0, limit, page):
+def arcgis_rows(base, where, order, limit=5000, *, fields):
+    def fetch_page(offset, size):
         response = get_json(base + "/query", {
             "where": where,
-            "outFields": "*",
+            "outFields": fields,
             "returnGeometry": "false",
             "orderByFields": order,
             "resultOffset": offset,
-            "resultRecordCount": min(page, limit - offset),
+            "resultRecordCount": size,
             "f": "json",
         })
-        batch = [x.get("attributes", {}) for x in response.get("features", [])]
-        if not isinstance(response.get("features"), list):
-            raise RuntimeError("ArcGIS response missing features")
-        rows.extend(batch)
-        if len(batch) < page:
-            return rows
-    # A capped response would hide newer records or misrepresent coverage.
-    raise RuntimeError(f"Reached ArcGIS {limit}-record cap; refusing to publish partial feed")
+        features = response.get("features")
+        if not isinstance(features, list) or any(
+            not isinstance(feature, dict) or not isinstance(feature.get("attributes"), dict)
+            for feature in features
+        ):
+            raise RuntimeError("Invalid ArcGIS features")
+        return [feature["attributes"] for feature in features], response.get(
+            "exceededTransferLimit", len(features) == size
+        ) is True
+
+    return iter_rows(fetch_page, limit=limit)
 
 
 def fetch_dc(days=30):
     # Official D.C. layer itself covers only the last 30 days.
-    rows = arcgis_rows(DC, "1=1", "ISSUE_DATE DESC", 9000)
+    rows = arcgis_rows(DC, "1=1", "ISSUE_DATE DESC, OBJECTID DESC", 9000,
+                       fields="PERMIT_ID,ISSUE_DATE,DESC_OF_WORK,PERMIT_TYPE_NAME,PERMIT_SUBTYPE_NAME,FULL_ADDRESS,WARD")
     cutoff = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=min(days, 30))).date().isoformat()
     result = []
     seen = set()
@@ -104,7 +109,7 @@ def fetch_dc(days=30):
             "id": ident, "issue_date": issued, "address": str(raw.get("FULL_ADDRESS") or "").strip(),
             "description": desc, "permit_type": typ, "work_type": subtype,
             "trade": classify(desc, subtype, typ),
-            "cost": safe_cost(raw.get("PERMIT_FEE")) if False else None,
+            "cost": None,
             "ward": str(raw.get("WARD") or ""), "source": SOURCES["dc"][1],
             "date_precision": "day",
         })
@@ -114,42 +119,45 @@ def fetch_dc(days=30):
 def fetch_philadelphia(days=30):
     cutoff = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=days)).date().isoformat()
     result = []
-    limit = 1000
-    for offset in range(0, 8000, limit):
+    def fetch_page(offset, size):
         q = (
             "SELECT permitnumber, permitissuedate, address, permittype, "
             "permitdescription, typeofwork, approvedscopeofwork, council_district "
             "FROM permits WHERE permitissuedate >= DATE '" + cutoff + "' "
-            "ORDER BY permitissuedate DESC LIMIT " + str(limit) + " OFFSET " + str(offset)
+            "ORDER BY permitissuedate DESC, permitnumber DESC, cartodb_id DESC LIMIT " + str(size) + " OFFSET " + str(offset)
         )
         response = get_json(PHL, {"q": q})
         batch = response.get("rows")
         if not isinstance(batch, list):
             raise RuntimeError("Philadelphia returned no rows array")
-        for raw in batch:
-            ident = str(raw.get("permitnumber") or "").strip()
-            issued = date_string(raw.get("permitissuedate"))
-            if not ident or not issued:
-                continue
-            desc = str(raw.get("approvedscopeofwork") or raw.get("permitdescription") or "")[:1200]
-            typ = str(raw.get("permittype") or "")
-            work = str(raw.get("typeofwork") or "")
-            result.append({
-                "id": ident, "issue_date": issued, "address": str(raw.get("address") or "").strip(),
-                "description": desc, "permit_type": typ, "work_type": work,
-                "trade": classify(desc, work, typ),
-                "cost": None, "ward": str(raw.get("council_district") or ""),
-                "source": SOURCES["philadelphia"][1], "date_precision": "day",
-            })
-        if len(batch) < limit:
-            break
-    return list({r["id"]: r for r in result}.values())
+        return batch, len(batch) == size
+
+    for raw in iter_rows(fetch_page, limit=8000):
+        ident = str(raw.get("permitnumber") or "").strip()
+        issued = date_string(raw.get("permitissuedate"))
+        if not ident or not issued:
+            continue
+        desc = str(raw.get("approvedscopeofwork") or raw.get("permitdescription") or "")[:1200]
+        typ = str(raw.get("permittype") or "")
+        work = str(raw.get("typeofwork") or "")
+        result.append({
+            "id": ident, "issue_date": issued, "address": str(raw.get("address") or "").strip(),
+            "description": desc, "permit_type": typ, "work_type": work,
+            "trade": classify(desc, work, typ),
+            "cost": None, "ward": str(raw.get("council_district") or ""),
+            "source": SOURCES["philadelphia"][1], "date_precision": "day",
+        })
+    unique = {}
+    for row in result:
+        unique.setdefault(row["id"], row)
+    return list(unique.values())
 
 
 def fetch_delaware():
     # State-level data has no per-permit issue dates: this is annual historical
     # research, not a live construction lead feed. Include 2024 onward only.
-    rows = arcgis_rows(DE, "P_YEAR >= '2024'", "P_YEAR DESC, OBJECTID DESC", 30000)
+    rows = arcgis_rows(DE, "P_YEAR >= '2024'", "P_YEAR DESC, OBJECTID DESC", 30000,
+                       fields="OBJECTID,P_YEAR,COUNTY,JURISDICTION,NOTES,R_NR,RECTYPE")
     result = []
     for raw in rows:
         ident = str(raw.get("OBJECTID") or "").strip()
@@ -197,6 +205,8 @@ def main():
     p.add_argument("--days", type=int, default=30)
     p.add_argument("--market", choices=["dc", "philadelphia", "delaware", "all"], default="all")
     args = p.parse_args()
+    if not 1 <= args.days <= 365:
+        p.error("Invalid days")
     tasks = {
         "dc": lambda: fetch_dc(args.days),
         "philadelphia": lambda: fetch_philadelphia(args.days),
