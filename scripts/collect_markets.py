@@ -81,8 +81,8 @@ def arcgis_rows(base, where, order, limit=5000):
         rows.extend(batch)
         if len(batch) < page:
             return rows
-    # Distinguish intentionally capped historical Delaware dataset from full 30-day feeds.
-    return rows
+    # A capped response would hide newer records or misrepresent coverage.
+    raise RuntimeError(f"Reached ArcGIS {limit}-record cap; refusing to publish partial feed")
 
 
 def fetch_dc(days=30):
@@ -147,9 +147,9 @@ def fetch_philadelphia(days=30):
 
 
 def fetch_delaware():
-    # State-level data does not have per-permit issue dates. This is historical,
-    # not a live lead feed; use latest available reported years.
-    rows = arcgis_rows(DE, "P_YEAR >= '2023'", "P_YEAR DESC, OBJECTID DESC", 9000)
+    # State-level data has no per-permit issue dates: this is annual historical
+    # research, not a live construction lead feed. Include 2024 onward only.
+    rows = arcgis_rows(DE, "P_YEAR >= '2024'", "P_YEAR DESC, OBJECTID DESC", 30000)
     result = []
     for raw in rows:
         ident = str(raw.get("OBJECTID") or "").strip()
