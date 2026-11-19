@@ -1,58 +1,51 @@
-# BuildThePulse — 10-customer discovery playbook
+# BuildThePulse — direct advertiser go-to-market playbook
 
-## The actual buyer problem
+## Positioning
+**Free for users. Supported by contextual ads.** Contractors, suppliers and construction-business operators can explore official permit activity in Chicago, D.C., Philadelphia and Delaware without a paywall.
 
-Contractors and construction sales teams may spend time searching public building-permit data for trade-relevant work. Our hypothesis: some would pay to receive *accurate, tailored and timely* permit signals without manually searching broad government datasets. Existing competitors make willingness-to-pay verification especially important.
+The offer to advertisers is *relevant placement beside permit research*, not a guaranteed construction lead and never the private data of subscribers.
 
-## Who to interview
+## First prospects
+Look for legitimate businesses already selling to contractors in each market: construction supply distributors, heavy equipment and tool rental, HVAC/plumbing/electrical wholesalers, construction SaaS vendors, insurance brokers serving contractors, and trade associations.
 
-Start with Chicago-based independent roofing contractors, HVAC companies, electrical subcontractors, and building-product sales firms. Target owners or business-development managers who already prospect for new project work. Avoid messaging residential owners from permit records.
+Initial prospecting target: 10–15 plausible advertisers in each of the four markets, researched individually. Prioritize companies with local sales teams and a specific reason to reach permit-research users.
 
-## Research interview (15 minutes)
+## Pilot inventory and pricing hypothesis
+- **Market sponsor:** one prominently labeled contextual sponsor card for the chosen jurisdiction on the permit explorer. Test **$150 for 30 days** as an introductory, negotiable research hypothesis—not a published rate or accepted order.
+- **Trade sponsor:** possible future category-based placement after proving meaningful category traffic; do not promise it before implementation.
+- **Digest sponsor:** possible future placement in a free construction newsletter; not for sale until the digest exists and subscriber consent is verified.
 
-1. How do you find new project opportunities today?
-2. Have you used Chicago permit data? What was frustrating?
-3. What information do you need before you decide a permit is worth following up on?
-4. Which trades and areas matter to you? How often do you want alerts?
-5. What's a recent opportunity you found through a permit, and what happened?
-6. Would a daily curated list be more useful than this free dashboard? Why?
-7. If a product reliably saved you an hour each week, would $39/month be worth testing? Ask for a pilot commitment; a polite yes is not a sale.
+**Important:** There is no verified external audience or conversion rate yet. Don't make traffic, sales, or lead guarantees. An applicant's permit does not necessarily represent an available contract.
 
-## A human first-contact email (send individually; no bulk automation)
+## What to say in outreach
+Subject: Local construction visibility — BuildThePulse
 
-Subject: Quick question about how you find Chicago construction projects
+Hello,
 
-Hi [name],
+I run BuildThePulse, a free site where construction businesses can browse publicly issued permits in [market]. We're beginning to test clearly labeled market sponsorships and thought [company] might be a relevant business for readers researching local construction activity.
 
-I'm testing a free tool that turns Chicago's public building permits into a searchable project feed. I'm speaking with a few local contractors to learn whether trade-specific alerts would actually save them time.
+We are early-stage and are not claiming a large established audience. Would you be open to a brief conversation about what type of exposure would actually be useful to your sales team?
 
-Would you be open to looking at the dashboard and telling me what is missing? I'm not selling a subscription yet.
+You can see the dashboard at https://buildthepulse.onrender.com and the sponsorship information at https://buildthepulse.onrender.com/advertise.html.
 
-Thanks,
-[Your name]
+Best,
+BuildThePulse
 
-## Organic acquisition loop (not guaranteed)
+Personalize the company and market references and avoid sending bulk unsolicited promotional emails. Honor applicable commercial email laws, including CAN-SPAM and Canadian CASL for outreach into Canada.
 
-1. The daily pipeline refreshes the dataset.
-2. Each week, inspect a few current permit trends (trade count, wards, reported project cost) and prepare a source-linked public post.
-3. Publish one helpful, original analysis on LinkedIn or an industry forum where promotion is permitted.
-4. Invite visitors to test the dashboard and answer a focused feedback question.
-5. Publish a credible use-case example only with consent.
+## Validation schedule
+1. **Week 1:** Verify that the website works well on mobile, the four market feeds are accurate, and 20 potential advertisers are relevant. Ask 10 actual contractors whether the data workflow saves time.
+2. **Week 2:** Approach 10 carefully matched sponsors individually. Ask what qualified exposure they purchase and whether they prefer market or trade targeting.
+3. **Weeks 3–4:** If sufficient real interest exists, negotiate a limited 30-day contextual sponsor pilot with explicit creative approval, terms, a single placement, and no performance guarantees. Collect payment only after agreeing on a lawful billing process.
+4. **Monthly:** Review consented pageviews and market selections in Supabase, evaluate lead inquiries, and disclose the limited scope of the metrics. Do not present them as unique users or total pageviews.
 
-Do not falsely say that you have paying customers, use fabricated testimonials, or imply city endorsement.
+## Measurement
+Use `reporting/metrics.sql` privately in Supabase's SQL editor. The first-party analytics count only visits from visitors who accepted optional measurement. There is no cross-site visitor ID or Google Analytics property. The source itself will not prove the number of unique contractor visitors.
 
-## Roadmap after first paid commitment
+When a genuine sponsor is approved, add an entry to `public/sponsors.json` for a geographic market. Use a plain, correctly labeled ad with a safe HTTPS destination. Its clicks are tracked only for visitors who opted into analytics. Editorial government permit results remain untouched.
 
-- v0.2: Saved searches and fully opt-in daily emails (Cloudflare Workers scheduled triggers + D1 + email provider free quota)
-- v0.3: Stripe Checkout, subscription webhooks, and server-side premium access (do not gate only with front-end JavaScript)
-- v0.4: More cities after confirming each dataset's licensing, updates, and schema
-- v0.5: Professional review or an affordable separate AI API only when it improves measurable customer outcomes
-
-## Success criteria
-
-- 10 conversations booked/completed within 3 weeks
-- 3 concrete requests for a recurring alert
-- 1 paid pilot before further product expansion
-- First alert trial must demonstrate reliable dates, links, precision, and opt-out
-
-These are operating goals, not income projections.
+## Before Google AdSense
+- Build more original market analysis and ensure enough authentic, helpful content.
+- Apply for an account and complete site verification, identity and policy review. No AdSense account is currently connected.
+- Get the publisher ID and configure approved advertising placements, an appropriate consent platform where required, and ads.txt information.
+- Update the privacy notice to name the actual ad network, purposes, opt-out mechanics, data sharing and retention. GPC cannot be disregarded just because the site owner accepts advertising trackers.
