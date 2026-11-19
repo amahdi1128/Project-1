@@ -12,3 +12,9 @@
 .waitlist-form .checkbox-label span{font-size:12px;letter-spacing:0;font-weight:500;line-height:1.55;color:#395348}
 .waitlist-form button:disabled{cursor:not-allowed;opacity:.55;transform:none}
 .waitlist-form input:focus-visible,.waitlist-form select:focus-visible{outline:2px solid #558a69;outline-offset:2px}
+
+/* Multi-market explorer */
+.filters{grid-template-columns:minmax(150px,1.2fr) minmax(220px,2fr) repeat(3,minmax(100px,1fr))}
+.market-mini{font-size:10px;font-weight:800;letter-spacing:.2px;text-transform:uppercase;color:#467257;margin-bottom:5px}
+@media(max-width:1100px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.filters .search-wrap{grid-column:auto}}
+@media(max-width:700px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.filters .search-wrap{grid-column:span 2}.filters label:first-child{grid-column:span 2}}
