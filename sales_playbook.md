@@ -1,4 +1,4 @@
-# BuildPulse — 10-customer discovery playbook
+# BuildThePulse — 10-customer discovery playbook
 
 ## The actual buyer problem
 
