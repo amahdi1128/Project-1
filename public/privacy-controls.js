@@ -1,7 +1,7 @@
-/* BuildThePulse privacy controls. No advertising, analytics or replay SDKs are loaded. */
+/* BuildThePulse privacy controls. Optional first-party audience measurement only after consent; no third-party ad tags installed. */
 (() => {
   'use strict';
-  const KEY = 'buildthepulse_privacy_choice_v1';
+  const KEY = 'buildthepulse_privacy_choice_v2';
   const gpc = navigator.globalPrivacyControl === true || navigator.doNotTrack === '1';
   const banner = document.getElementById('privacy-banner');
   const modal = document.getElementById('privacy-modal');
@@ -11,7 +11,7 @@
   function read() {
     try {
       const data = JSON.parse(localStorage.getItem(KEY) || 'null');
-      return data && data.version === 1 ? data : null;
+      return data && data.version === 2 ? data : null;
     } catch { return null; }
   }
   function effective(data) {
@@ -28,11 +28,12 @@
     if (analyticsBox) analyticsBox.checked = effective(data);
     if (status) status.textContent = gpc
       ? 'Your browser privacy signal is active; optional tracking is refused.'
-      : 'No optional analytics or advertising cookies are currently used on this site.';
+      : 'Optional anonymous first-party pageview and sponsor-click measurement is '+(effective(data)?'enabled.':'off.')+' No third-party ad trackers are installed.';
     if (banner) banner.hidden = !!data || gpc;
+    document.dispatchEvent(new CustomEvent('buildthepulse:privacychange',{detail:{analyticsAllowed:effective(data)}}));
   }
   function save(optional) {
-    const record = {version: 1, optional: !gpc && optional === true, updatedAt: new Date().toISOString()};
+    const record = {version: 2, optional: !gpc && optional === true, updatedAt: new Date().toISOString()};
     try { localStorage.setItem(KEY, JSON.stringify(record)); } catch { /* storage denied */ }
     apply(record);
     closeModal();
