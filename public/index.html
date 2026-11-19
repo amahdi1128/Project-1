@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="BuildPulse Chicago tracks official building permit activity and helps contractors discover potential projects by trade, neighborhood, and reported cost.">
+  <title>BuildPulse — Chicago construction intelligence</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><div class="container nav-bar">
+    <a class="brand" href="#home" aria-label="BuildPulse home"><span class="brand-mark">▥</span> Build<span class="brand-accent">Pulse</span><span class="brand-city">CHICAGO</span></a>
+    <nav aria-label="Main navigation"><a href="#permits">Explore permits</a><a href="#how">How it works</a><a href="#pricing">Pricing</a></nav>
+    <a class="nav-cta" href="#early-access">Get early access <span aria-hidden="true">↗</span></a>
+  </div></header>
+
+  <main id="home">
+    <section class="hero container">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="live-dot"></span> CONSTRUCTION MARKET INTELLIGENCE · CHICAGO</div>
+        <h1>Know what's <em>being built.</em><br>Before your competitors do.</h1>
+        <p class="hero-description">Building permits reveal where construction activity is happening. We organize public records into a searchable dashboard for contractors, suppliers, and property-services teams.</p>
+        <div class="hero-actions"><a class="button primary" href="#permits">Explore permit activity <span aria-hidden="true">→</span></a><a class="button quiet" href="#how">See how it works <span aria-hidden="true">↗</span></a></div>
+        <div class="trust"><span>✓ Official City of Chicago data</span><span>✓ No fabricated projects</span><span>✓ No payment needed to browse</span></div>
+      </div>
+      <aside class="hero-side" aria-label="Product overview">
+        <div class="hero-side-title"><span class="small-marker"></span> LOCAL SIGNAL / 01</div>
+        <div class="hero-metric">01 <span>source of truth</span></div>
+        <div class="hero-rule"></div>
+        <div class="hero-metric">30 <span>day rolling window</span></div>
+        <div class="hero-rule"></div>
+        <div class="hero-metric">10 <span>trade categories</span></div>
+        <p>Built on city-published records. Categories are automated keyword classifications, not verified trade assignments.</p>
+      </aside>
+    </section>
+
+    <section class="dashboard-section" id="permits"><div class="container">
+      <div class="section-top"><div><span class="overline">THE SIGNAL BOARD</span><h2>A clearer view of the pipeline.</h2><p>Sort, filter, and export public permits. No account required for the preview.</p></div><div class="source-indicator"><span class="tiny-pulse"></span><span id="update-status">Loading data...</span></div></div>
+      <div id="demo-banner" class="demo-banner" role="status" hidden><strong>Preview mode:</strong> The records below are fictional examples, not actual city permits. The automated collector replaces them with official data after deployment.</div>
+      <div id="error-banner" class="error-banner" role="alert" hidden></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div>Records loaded <span class="stat-glyph">◱</span></div><strong id="stat-records">—</strong><span>In this dataset</span></div>
+        <div class="stat-card"><div>Reported project value <span class="stat-glyph">↗</span></div><strong id="stat-value">—</strong><span>Sum of reported costs; not all permits list a value</span></div>
+        <div class="stat-card"><div>Trade categories <span class="stat-glyph">▦</span></div><strong id="stat-trades">—</strong><span>Matching current records</span></div>
+        <div class="stat-card"><div>Newest permit date <span class="stat-glyph">◷</span></div><strong id="stat-date">—</strong><span>City issue date, not discovery time</span></div>
+      </div>
+      <div class="dashboard-panel">
+        <div class="panel-heading"><div><span class="overline">PERMIT EXPLORER</span><h3>Discover new opportunities</h3></div><button class="button outline" id="download-csv" type="button">↓ Export filtered CSV</button></div>
+        <div class="filters">
+          <label class="search-wrap"><span>SEARCH PERMITS</span><input id="search" type="search" placeholder="Try 'roof', 'renovation', 'West Loop'..." autocomplete="off"></label>
+          <label><span>TRADE</span><select id="trade"><option value="">All trades</option></select></label>
+          <label><span>MINIMUM VALUE</span><select id="min-cost"><option value="0">Any value</option><option value="10000">$10,000+</option><option value="50000">$50,000+</option><option value="100000">$100,000+</option><option value="500000">$500,000+</option></select></label>
+          <label><span>WARD</span><select id="ward"><option value="">All wards</option></select></label>
+        </div>
+        <div class="result-meta"><span id="result-count">Loading records...</span><span>Sorted by issue date · newest first</span></div>
+        <div class="table-wrap"><table><thead><tr><th>ISSUED</th><th>LOCATION / DESCRIPTION</th><th>CATEGORY</th><th>REPORTED COST</th><th>SOURCE</th></tr></thead><tbody id="rows"></tbody></table></div>
+        <div id="empty-state" class="empty-state" hidden>No matching permits. Adjust the filters and try again.</div>
+        <div class="pagination"><button id="prev-page" class="page-button" type="button" disabled>← Previous</button><span id="page-label">Page 1</span><button id="next-page" class="page-button" type="button" disabled>Next →</button></div>
+      </div>
+      <p class="small-note">Source: <a href="https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu" target="_blank" rel="noopener noreferrer">City of Chicago — Building Permits</a>. Permit records can be delayed or corrected. Reported costs are unverified and may be missing; classifications are heuristic. BuildPulse is independent of the City of Chicago.</p>
+    </div></section>
+
+    <section class="how container" id="how"><div class="how-title"><span class="overline">ENGINEERED FOR CLARITY</span><h2>From raw records to<br><em>usable intelligence.</em></h2><p>Instead of digging through municipal data portals, explore a focused view of construction activity that refreshes automatically when deployed.</p></div><div class="steps">
+      <div class="step"><div class="step-index">01 / COLLECT</div><h3>Official city records</h3><p>A scheduled collector fetches newly issued permits from Chicago's public data API.</p></div>
+      <div class="step"><div class="step-index">02 / ORGANIZE</div><h3>Clean and categorize</h3><p>Normalize dates, costs, and descriptions; assign indicative trades with transparent keyword rules.</p></div>
+      <div class="step"><div class="step-index">03 / EXPLORE</div><h3>Find relevant activity</h3><p>Search by project work, location, value, and trade, then export the filtered list.</p></div>
+    </div></section>
+
+    <section class="pricing-section" id="pricing"><div class="container"><div class="section-top"><div><span class="overline">EARLY ACCESS</span><h2>Made for independent operators.</h2><p>We are testing which reports and alerts are worth paying for. No paid subscription is active yet.</p></div></div>
+      <div class="pricing-grid">
+        <article class="price-card"><span class="overline">CURRENT PREVIEW</span><h3>Explorer</h3><p class="price">Free</p><p>Browse public records, search and export the current dataset.</p><ul><li>Public permit dashboard</li><li>Search and trade filters</li><li>CSV export</li></ul><a class="button outline full" href="#permits">Explore free</a></article>
+        <article class="price-card featured"><div class="beta-label">CONCEPT — NOT YET FOR SALE</div><span class="overline">PROPOSED PLAN</span><h3>Trade Alerts</h3><p class="price">$39 <span>/ month, proposed</span></p><p>Personalized alerts for contractors who want to focus on specific kinds of projects.</p><ul><li>Daily trade-specific email alerts</li><li>Saved search profiles</li><li>Weekly market summary</li></ul><a class="button primary full" href="#early-access">Request early access →</a></article>
+        <article class="price-card"><span class="overline">FUTURE CONCEPT</span><h3>Team Intelligence</h3><p class="price">$99 <span>/ month, proposed</span></p><p>Permit trend exports and shared monitoring for small sales teams.</p><ul><li>Multiple watchlists</li><li>Team reports</li><li>Historical trend exports</li></ul><a class="button outline full" href="#early-access">Join interest list</a></article>
+      </div>
+    </div></section>
+
+    <section class="waitlist container" id="early-access"><div><span class="overline">HELP SHAPE THE PRODUCT</span><h2>Tell us which projects matter.</h2><p>Interested in automated trade alerts? Join the research waitlist. No payment required and no paid subscription will begin automatically.</p></div><form id="waitlist-form" class="waitlist-form"><label><span>WORK EMAIL</span><input type="email" name="email" placeholder="you@company.com" required></label><label><span>YOUR TRADE</span><select name="trade"><option>All trades</option><option>Roofing</option><option>HVAC</option><option>Plumbing</option><option>Electrical</option><option>Windows &amp; Doors</option><option>Concrete</option><option>Demolition</option><option>New Construction</option><option>Renovation</option></select></label><input type="text" name="website" class="honeypot" aria-hidden="true" tabindex="-1" autocomplete="off"><button class="button primary full" type="submit">Join early access →</button><p class="form-state" id="form-state" role="status">Waitlist submissions become active after the free database is configured.</p></form></section>
+  </main>
+  <footer><div class="container footer"><div class="brand">▥ Build<span class="brand-accent">Pulse</span></div><p>Unofficial project-monitoring tool. Public data © its respective publisher. No affiliation with the City of Chicago.</p><a href="https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu" target="_blank" rel="noopener noreferrer">Official source ↗</a></div></footer>
+</body>
+</html>
