@@ -6,7 +6,15 @@
 <script>if(location.hostname==='buildpulse-chicago.onrender.com') location.replace('https://buildthepulse.onrender.com'+location.pathname+location.search+location.hash);</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="BuildThePulse is a completely free construction permit dashboard for Chicago, Washington, D.C., Philadelphia and Delaware. Search, filter and export official data without a paywall.">
-  <title>BuildThePulse — North American construction intelligence</title>
+  <title>BuildThePulse | Free Construction Permit Search</title>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "BuildThePulse",
+      "url": "https://buildthepulse.onrender.com/"
+    }
+  </script>
   <link rel="stylesheet" href="./styles.css">
   <script src="./waitlist-config.js" defer></script>
   <script src="./app.js" defer></script>
@@ -16,7 +24,7 @@
 <body>
   <header class="site-header"><div class="container nav-bar">
     <a class="brand" href="#home" aria-label="BuildThePulse home"><span class="brand-mark">▥</span> Build<span class="brand-accent">ThePulse</span><span class="brand-city">NORTH AMERICA</span></a>
-    <nav aria-label="Main navigation"><a href="#permits">Explore permits</a><a href="#free">Why free?</a><a href="./advertise.html">Advertise</a></nav>
+    <nav aria-label="Main navigation"><a href="#permits">Explore permits</a><a href="#markets">Markets</a><a href="#free">Why free?</a><a href="./advertise.html">Advertise</a></nav>
     <a class="nav-cta" href="./advertise.html">Become a sponsor <span aria-hidden="true">↗</span></a>
   </div></header>
 
@@ -24,7 +32,7 @@
     <section class="hero container">
       <div class="hero-copy">
         <div class="eyebrow"><span class="live-dot"></span> CONSTRUCTION MARKET INTELLIGENCE · MULTI-MARKET</div>
-        <h1>Know what's <em>being built.</em><br>Before your competitors do.</h1>
+        <h1>Find <em>building permits</em> for free.</h1>
         <p class="hero-description">Find construction activity across Chicago, Washington, D.C., Philadelphia, and Delaware—organized from separate government data sources in one place.</p>
         <div class="hero-actions"><a class="button primary" href="#permits">Explore permit activity <span aria-hidden="true">→</span></a><a class="button quiet" href="#how">See how it works <span aria-hidden="true">↗</span></a></div>
         <div class="trust"><span>✓ Official public data sources</span><span>✓ No fabricated projects</span><span>✓ 100% free to search and export</span></div>
@@ -72,6 +80,16 @@
       </div>
       <p class="small-note">Sources: <a href="https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu" target="_blank" rel="noopener noreferrer">Chicago</a>, <a href="https://opendata.dc.gov/datasets/DCGIS::building-permits-in-last-30-days" target="_blank" rel="noopener noreferrer">D.C.</a>, <a href="https://data.phila.gov/visualizations/li-building-permits/" target="_blank" rel="noopener noreferrer">Philadelphia</a>, <a href="https://stateplanning.delaware.gov/development-trends/index.shtml" target="_blank" rel="noopener noreferrer">Delaware</a>. Coverage differs by region. Delaware blends recent Sussex County permit dates with statewide annual permit-location trends. Coverage and timestamps differ. The collector may retain old data when a source fails. BuildThePulse is unaffiliated with these governments.</p>
     </div></section>
+
+    <section class="container market-directory" id="markets">
+      <h2>Explore building permits by market</h2>
+      <ul>
+        <li><a href="./permits/chicago.html">Chicago building permits</a></li>
+        <li><a href="./permits/dc.html">Washington, D.C. building permits</a></li>
+        <li><a href="./permits/philadelphia.html">Philadelphia building permits</a></li>
+        <li><a href="./permits/delaware.html">Delaware building permits and trends</a></li>
+      </ul>
+    </section>
 
     <section class="how container" id="how"><div class="how-title"><span class="overline">ENGINEERED FOR CLARITY</span><h2>From raw records to<br><em>usable intelligence.</em></h2><p>Instead of digging through municipal data portals, explore a focused view of construction activity that refreshes automatically when deployed.</p></div><div class="steps">
       <div class="step"><div class="step-index">01 / COLLECT</div><h3>Official city records</h3><p>Scheduled collectors fetch permit records from multiple city and state public data sources.</p></div>

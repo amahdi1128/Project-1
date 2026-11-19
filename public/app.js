@@ -150,6 +150,11 @@ async function subscribe(event) {
   }
 }
 async function start() {
+  const market = new URLSearchParams(location.search).get('market');
+  const selector = $('market');
+  if (Array.from(selector.options).some(option => option.value === market)) {
+    selector.value = market;
+  }
   $('search').addEventListener('input',filter);
   ['market','trade','ward','min-cost'].forEach(id=>$(id).addEventListener('change',filter));
   $('prev-page').addEventListener('click',()=>{state.page--;render();});
