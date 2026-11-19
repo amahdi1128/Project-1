@@ -1,57 +1,76 @@
-# BuildThePulse Chicago
+# BuildThePulse — free, advertiser-supported construction intelligence
 
-**Live website:** https://buildpulse-chicago.onrender.com  
-**Project:** Experimental $0-upfront public-data business for construction contractors.  
-**Status as of November 19, 2026:** Public permit dashboard and daily data collection are live. Customer research waitlist code is prepared but deliberately **not accepting signups** until secure database storage is deployed. There are **no paid subscriptions and no revenue claims**.
+**Live site:** https://buildthepulse.onrender.com  
+**Advertise:** https://buildthepulse.onrender.com/advertise.html  
+**Privacy:** https://buildthepulse.onrender.com/privacy.html
 
-## What's working
-- Searchable Chicago building-permit explorer, including trade/ward/cost filtering and CSV export.
-- Official public-data ingestion from City of Chicago Socrata API `ydr8-5enu`.
-- Automatic permit updates via GitHub Actions daily schedule.
-- Automatic Render Static Site deployment on changes to `main`.
-- Original permit source links, honest classification disclaimers, and no fabricated records once live data is collected.
-- Tests for the Python collector.
+BuildThePulse is a free public-data dashboard for construction professionals. It aggregates official permit records from Chicago, Washington, D.C., Philadelphia and Delaware. Visitors can filter and export the available data without payment or creating an account.
 
-## Customer and positioning
-Target initial buyer: Chicago roofing, HVAC, electrical and related independent contractors or trade suppliers. Hypothesis: a useful alert service with filtered opportunities could command $39/month for individuals and $99/month for teams. **These are hypothetical prices, not active paid plans.** A permit is not necessarily a job open to bid.
+## Business model (as of November 19, 2026)
 
-## Current privacy-first survey
-The website now includes a research form with work email, trade, optional company, price willingness, interest in a pilot, and affirmative contact consent. The button is intentionally disabled until a secure private data store and support contact exist. No personal signup data is saved to the public GitHub repository.
+- The dashboard, filters and CSV export are **free**.
+- We are testing **clearly labeled direct market sponsorships**. Advertisers can request information on the sponsorship page; actual ad inventory is not yet sold.
+- An optional free-update interest list is connected to a private Supabase database. The email digest itself is **not yet being sent automatically**.
+- **No paid subscription, checkout, AdSense publisher ID, programmatic ad campaign or advertising revenue is currently active.**
+- Sponsor configurations live in `public/sponsors.json`. Empty means the dashboard shows an honest "Sponsorship available" placement. Add a sponsor only after agreeing on terms and obtaining approval for creative and URL.
 
-The optional **Supabase integration is ready as code**:
-- `sql/supabase_waitlist.sql` — database table and access controls.
-- `supabase/functions/buildpulse-waitlist/index.ts` — validated server-side collection endpoint.
-- `supabase/config.toml` — public endpoint JWT setting.
-- `public/waitlist-config.js` — empty by default; populate only with a public function URL after setup.
-- `public/privacy.html` — privacy notice.
+## Markets and coverage caveats
 
-See **[SUPABASE_SETUP.md](SUPABASE_SETUP.md)** for activation and testing instructions. Do **not** publish service-role keys or other secrets in this repository.
+- Chicago — City of Chicago public building permits, approximately a 30-day rolling window.
+- Washington, D.C. — D.C. public building permits, recent issuance records.
+- Philadelphia — city's building permits, recent issuance records.
+- Delaware — state planning development-trends permit locations (annual, historical) **plus Sussex County official permits with daily issue dates**. The Sussex feed does not cover every Delaware locality. These record sets are labeled and not presented as equivalent.
 
-## Daily workflow
-```text
-.github/workflows/daily.yml
-   -> test Python data normalization
-   -> fetch last 30 days of official Chicago permit records
-   -> normalize & classify by indicative trade
-   -> update public/data/permits.json
-   -> commit new data to GitHub
-   -> Render automatically deploys changed site files
-```
+Collectors: `scripts/collect.py`, `scripts/collect_markets.py`, `scripts/collect_sussex.py`. Scheduled GitHub Actions updates JSON feeds and commits changes; Render serves `public/`.
 
-Test collection locally using Python 3.12+:
-```sh
+## Audience measurement (privacy-conscious and free-tier)
+
+- `public/growth.js` records `page_view`, `market_select` and `sponsor_click` events only after the visitor consents.
+- Global Privacy Control / Do Not Track are treated as an opt-out. Previous experimental privacy preferences are not reused as permission for analytics; a new v2 preference is required.
+- Event rows contain **event type, market, page category, sponsor placement and timestamp**, with no visitor identifier, IP address, user agent, referrer or email in the analytics table.
+- This measures **consenting event counts, not unique visitors, impressions delivered by Google, or guaranteed advertiser conversions**. Host infrastructure may separately log IP information.
+- Data is stored privately in `public.buildthepulse_analytics_events`. Use `reporting/metrics.sql` in the Supabase SQL editor for private reports.
+- No third-party ad trackers or AdSense scripts are installed. Adding those requires appropriate consent controls, updated policies and an approved ad account.
+
+## Sponsor inquiry and mailing interest
+
+- `public/advertise.html`, `public/advertise.js` — live sponsor inquiry form.
+- `public/index.html`, `public/app.js` — free-update interest list (no current automated emails).
+- `supabase/functions/buildthepulse-growth/index.ts` — validated sponsor inquiry and analytics endpoint.
+- `supabase/functions/buildpulse-waitlist/index.ts` — free-update interest endpoint.
+- Private tables: `buildthepulse_sponsor_inquiries`, `buildthepulse_analytics_events`, `buildpulse_waitlist`, `buildthepulse_privacy_requests`. RLS is enabled and anonymous table permissions are revoked. No database secrets are published to JavaScript or GitHub.
+- The sponsor form is a request for information **not a purchase contract**. Leads are available in Supabase Table Editor; no CRM notifications or outbound sales sequences are running automatically.
+
+## Local testing
+
+```bash
 python -m unittest discover -s tests -v
-python scripts/collect.py --days 30
+node --check public/app.js
+node --check public/growth.js
+node --check public/advertise.js
 cd public && python -m http.server 8000
 ```
 
-**Source:** https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu
+## Revenue validation
 
-## Privacy and accuracy
-Only public permit site data is exported. Contact names, phone numbers and applicant emails are excluded from permit ingestion. Classifications are heuristic; dates and project costs are provided by the city and may be revised. BuildThePulse is independent of the City of Chicago.
+1. Build original, useful market/trade reports and obtain search/organic distribution.
+2. Interview contractors to validate that BuildThePulse reaches the intended business audience.
+3. Offer a transparent 30-day market sponsorship trial after real usage is measurable.
+4. Record sponsor inquiries, consented event counts and any actual commercial response.
+5. Consider AdSense only after site quality, audience, eligibility, consent and account approval have been confirmed. Google may reject sites without sufficient original value.
 
-## Costs
-The public prototype uses GitHub Actions and Render Static Sites on available free tiers. Supabase also offers a limited free plan, subject to allowances and policy changes. No commercial AI API is in use; ChatGPT Plus does not grant OpenAI API credits. Do not configure paid infrastructure without first checking pricing. Stripe checkout is **not configured** and no payment should be collected for unbuilt features.
+See `sales_playbook.md` for the sponsor prospecting and validation approach.
 
-## Next business milestone
-Speak with ten real contractors, identify one repeatable alert workflow, obtain three credible pilot prospects, and then build a minimum trade-specific email-alert service. See `sales_playbook.md`.
+## Cost / important limitations
+
+GitHub, Render Static Sites and Supabase currently use free tiers, subject to usage limits and future pricing changes. No OpenAI API calls or additional paid subscription are required for the present build. ChatGPT Plus does not include API credits. The project does **not** currently generate income. Advertiser contracts and privacy/compliance requirements must be evaluated before commercial scale.
+
+## Official public data attribution
+
+- Chicago: https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu
+- D.C.: https://opendata.dc.gov/datasets/DCGIS::building-permits-in-last-30-days
+- Philadelphia: https://data.phila.gov/visualizations/li-building-permits/
+- Delaware: https://stateplanning.delaware.gov/development-trends/index.shtml
+- Sussex County: https://map.sussexcountyde.gov/trdserver/rest/services/Permit_Points/FeatureServer/0
+
+BuildThePulse is not affiliated with these governments. Permits may be delayed, amended or incomplete, and are not evidence of open construction bids.
