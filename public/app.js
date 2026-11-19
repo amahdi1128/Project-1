@@ -2,7 +2,7 @@
 const $ = (id) => document.getElementById(id);
 const money = new Intl.NumberFormat('en-US', { style: 'currency', currency:'USD', maximumFractionDigits:0 });
 const number = new Intl.NumberFormat('en-US');
-const MARKETS = {chicago:'Chicago, IL',dc:'Washington, D.C.',philadelphia:'Philadelphia, PA',delaware:'Delaware (statewide)'};
+const MARKETS = {chicago:'Chicago, IL',dc:'Washington, D.C.',philadelphia:'Philadelphia, PA',delaware:'Delaware',sussex:'Sussex County, Delaware'};
 const SOURCES = {chicago:'https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu',dc:'https://opendata.dc.gov/datasets/DCGIS::building-permits-in-last-30-days',philadelphia:'https://data.phila.gov/visualizations/li-building-permits/',delaware:'https://stateplanning.delaware.gov/development-trends/index.shtml'};
 const state = {items: [], filtered: [], page: 1, size: 12, meta:{}, feeds:{}, failures:[]};
 
@@ -38,7 +38,7 @@ function updateStats() {
   $('stat-trades').textContent=String(new Set(items.map(x=>x.trade)).size);
   $('stat-date').textContent=items.length ? (items[0].date_precision==='year' ? String(items[0].permit_year) + ' (year)' : prettyDate(items[0].issue_date)) : '—';
   const enabled=Object.keys(state.feeds).length;
-  $('update-status').textContent=`${enabled}/4 official market feeds available`;
+  $('update-status').textContent=`${enabled}/5 official data feeds available across four markets`;
 }
 function filter() {
   const q=$('search').value.toLowerCase().trim();
@@ -61,7 +61,7 @@ function render() {
     const tr=el('tr');
     tr.append(el('td','',p.date_precision==='year' ? `${p.permit_year} · year only` : prettyDate(p.issue_date)));
     const location=el('td');
-    location.append(el('div','market-mini',MARKETS[p.market] || p.market));
+    location.append(el('div','market-mini',p.scope || (MARKETS[p.market] || p.market)));
     location.append(el('div','location',p.address || 'Address not supplied'));
     location.append(el('div','desc',p.description || p.work_type || p.permit_type || 'No work description'));
     tr.append(location);
@@ -71,7 +71,7 @@ function render() {
     if(state.feeds[p.market]?.meta?.mode==='demo') linkCell.append(el('span','','Demo only'));
     else {
       const link=el('a','source-link','Official source ↗');
-      link.href=p.market==='chicago'?sourceLink(p.id):SOURCES[p.market];
+      link.href=p.market==='chicago'?sourceLink(p.id):(p.source || SOURCES[p.market]);
       link.target='_blank';link.rel='noopener noreferrer';linkCell.append(link);
     }
     tr.append(linkCell); tbody.append(tr);
@@ -173,6 +173,7 @@ async function start() {
     ['dc', './data/dc.json'],
     ['philadelphia', './data/philadelphia.json'],
     ['delaware', './data/delaware.json'],
+    ['sussex', './data/sussex.json'],
   ];
   const outcomes = await Promise.all(feeds.map(async ([market, path]) => {
     try {
@@ -186,7 +187,8 @@ async function start() {
   for (const result of outcomes) {
     if (result.error) {state.failures.push(result.market); continue;}
     state.feeds[result.market] = result.data;
-    state.items.push(...result.data.items.map(item=>({...item,market:result.market})));
+    const displayMarket = result.market === 'sussex' ? 'delaware' : result.market;
+    state.items.push(...result.data.items.map(item=>({...item,market:displayMarket,scope:result.data.meta.scope || ''})));
   }
   state.items.sort((a,b)=>b.issue_date.localeCompare(a.issue_date));
   const failed = state.failures.map(m=>MARKETS[m]).join(', ');
