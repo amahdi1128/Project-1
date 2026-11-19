@@ -92,39 +92,40 @@
       <p class="small-note">Advertisements will be labeled. Advertisers cannot alter or prioritize government permit records. No sponsored company is currently endorsed or displayed as an actual advertiser.</p>
     </div></section>
 
-    <section class="waitlist container" id="early-access"><div><span class="overline">HELP SHAPE THE PRODUCT</span><h2>Tell us which projects matter.</h2><p>Interested in automated trade alerts? Join the research waitlist. No payment required and no paid subscription will begin automatically.</p></div><form id="waitlist-form" class="waitlist-form" action="#" method="post">
+    <section class="waitlist container" id="free-updates"><div>
+      <span class="overline">FREE INDUSTRY UPDATES · INTEREST LIST</span>
+      <h2>Get notified when free permit digests launch.</h2>
+      <p>Tell us what kind of construction activity you follow. We'll let interested readers know about the planned free email digest. Automated newsletters are not being sent yet; joining this list does not create a paid account.</p>
+    </div><form id="waitlist-form" class="waitlist-form" action="#" method="post">
       <label><span>WORK EMAIL</span><input type="email" name="email" placeholder="you@company.com" autocomplete="email" maxlength="254" required></label>
-      <label><span>YOUR TRADE</span><select name="trade"><option>All trades</option><option>Roofing</option><option>HVAC</option><option>Plumbing</option><option>Electrical</option><option>Windows &amp; Doors</option><option>Concrete</option><option>Demolition</option><option>New Construction</option><option>Renovation</option></select></label>
+      <label><span>TRADE OR AREA OF INTEREST</span><select name="trade"><option>All trades</option><option>Roofing</option><option>HVAC</option><option>Plumbing</option><option>Electrical</option><option>Windows &amp; Doors</option><option>Concrete</option><option>Demolition</option><option>New Construction</option><option>Renovation</option></select></label>
       <label><span>COMPANY (OPTIONAL)</span><input type="text" name="company" autocomplete="organization" maxlength="120" placeholder="Company name"></label>
-      <label><span>WHAT WOULD A USEFUL ALERT SERVICE BE WORTH TO YOU?</span><select name="requested_plan" required>
-        <option value="not_sure">Not sure yet</option><option value="no">I would only use a free version</option><option value="19">$19/month</option><option value="39">$39/month</option><option value="79">$79/month</option><option value="99_plus">$99+/month</option>
-      </select></label>
-      <label class="checkbox-label"><input type="checkbox" name="wants_pilot" value="yes"><span>I'd consider testing a paid pilot if it solves my problem.</span></label>
-      <label class="checkbox-label"><input type="checkbox" name="consent_to_contact" value="yes" required><span>BuildThePulse may email me about this research and early-access pilot. I can opt out at any time.</span></label>
+      <input type="hidden" name="requested_plan" value="not_sure">
+      <label class="checkbox-label"><input type="checkbox" name="consent_to_contact" value="yes" required><span>I agree to receive occasional BuildThePulse emails about the free digest and product updates. I may unsubscribe at any time.</span></label>
       <input type="text" name="website" class="honeypot" aria-hidden="true" tabindex="-1" autocomplete="off">
-      <button class="button primary full" type="submit" disabled>Signups opening soon</button>
-      <p class="form-state" id="form-state" role="status" aria-live="polite">Research signup is not active yet.</p>
-      <p class="small-note">We collect only the details above to assess interest and contact volunteers about BuildThePulse. No payment is requested or taken. <a href="./privacy.html">Privacy notice</a>.</p>
+      <button class="button primary full" type="submit">Join the free updates interest list →</button>
+      <p class="form-state" id="form-state" role="status" aria-live="polite">No payment required. This is an interest list, not a functioning automatic newsletter yet.</p>
+      <p class="small-note">We store your email, trade and optional company to contact you about free updates. <a href="./privacy.html">Privacy notice</a>.</p>
     </form></section>
   </main>
-  <footer><div class="container footer"><div class="brand">▥ Build<span class="brand-accent">ThePulse</span></div><p>Unofficial construction-intelligence service. Public permit records can be incomplete or delayed. Independent of the issuing agencies.</p><div class="footer-links"><a href="./privacy.html">Privacy policy and Notice at Collection</a><button id="privacy-settings-button" type="button">Your Privacy Choices</button><a href="./privacy.html#rights">Privacy rights &amp; requests</a><a href="./privacy.html#cookies">Cookie information</a></div></div></footer>
+  <footer><div class="container footer"><div class="brand">▥ Build<span class="brand-accent">ThePulse</span></div><p>Unofficial construction-intelligence service. Public permit records can be incomplete or delayed. Independent of the issuing agencies.</p><div class="footer-links"><a href="./advertise.html">Advertise with us</a><a href="./privacy.html">Privacy policy and Notice at Collection</a><button id="privacy-settings-button" type="button">Your Privacy Choices</button><a href="./privacy.html#rights">Privacy rights &amp; requests</a><a href="./privacy.html#cookies">Cookie information</a></div></div></footer>
 
 <div id="privacy-banner" class="privacy-banner" role="region" aria-label="Cookie and privacy choices" hidden>
   <h2>Your privacy choices</h2>
-  <p>BuildThePulse currently uses no advertising, analytics, session-recording or chat-tracking cookies. Your choice is saved locally so we can remember it. Hosting providers may process essential request logs. You can reject optional technologies now and change your choice anytime.</p>
+  <p>BuildThePulse uses optional, first-party aggregate audience measurement only if you allow it. We record page views, selected markets and sponsor clicks without visitor identifiers. Contextual sponsor placements do not depend on tracking. No third-party advertising or session-replay scripts are currently installed. You can reject optional analytics and change your preference anytime.</p>
   <div class="privacy-actions">
     <button id="privacy-reject" class="privacy-primary" type="button">Reject optional tracking</button>
     <button id="privacy-settings" type="button">Manage preferences</button>
-    <button id="privacy-accept" type="button">Allow optional if introduced</button>
+    <button id="privacy-accept" type="button">Allow anonymous analytics</button>
     <a href="./privacy.html">Read privacy policy</a>
   </div>
 </div>
 <div id="privacy-modal" class="privacy-modal" role="dialog" aria-modal="true" aria-label="Privacy preferences" aria-hidden="true" hidden>
   <div class="privacy-modal-panel">
     <h2>Privacy preferences</h2>
-    <p>You decide whether optional tools may be enabled in the future. No optional analytics, advertising, session replay, or tracking SDKs are currently installed. Choosing “allow” does not itself load any third-party scripts.</p>
+    <p>You can allow or reject optional first-party aggregate audience analytics. When allowed, BuildThePulse records page views, selected markets and sponsor clicks without storing IP addresses, persistent IDs or emails in its analytics database. No third-party ad tags or session recording tools are currently installed.</p>
     <div class="privacy-setting"><input type="checkbox" checked disabled aria-label="Necessary local preference storage"><span><strong>Necessary site functions — always on</strong>Public permit browsing, normal host security logs, and local storage of this preference. No account required for browsing.</span></div>
-    <label class="privacy-setting"><input id="privacy-optional" type="checkbox"><span><strong>Optional analytics — currently unused</strong>Default off. We will update this disclosure and implementation before adding any optional analytics or advertising technology. Global Privacy Control signals always override consent to tracking.</span></label>
+    <label class="privacy-setting"><input id="privacy-optional" type="checkbox"><span><strong>Optional aggregate analytics</strong>Off by default. Enabling allows anonymous pageview, market-selection and sponsor-click event counting. Global Privacy Control overrides consent. Any future cross-site ad tracking requires a separate implementation and notice.</span></label>
     <p id="privacy-status" role="status"></p>
     <div class="privacy-actions"><button id="privacy-save" class="privacy-primary" type="button">Save choices</button><button id="privacy-close" type="button">Close</button><a href="./privacy.html#rights">Privacy rights</a></div>
   </div>
