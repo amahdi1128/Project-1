@@ -1,6 +1,7 @@
-// BuildPulse public waitlist endpoint — deploy as a Supabase Edge Function.
+// BuildThePulse free bulletin interest endpoint — deploy as a Supabase Edge Function.
 // No service-role or secret key should ever be embedded in the website.
 const ORIGINS = new Set([
+  'https://buildthepulse.onrender.com',
   'https://buildpulse-chicago.onrender.com',
   'http://localhost:8000',
   'http://127.0.0.1:8000',
