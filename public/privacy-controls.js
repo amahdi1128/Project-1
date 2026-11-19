@@ -64,4 +64,8 @@
   if (analyticsBox && gpc) { analyticsBox.checked = false; analyticsBox.disabled = true; }
   if (gpc && !read()) save(false);
   else apply(read());
+  if (location.hash === '#privacy-choices') openModal();
+  window.addEventListener('hashchange', () => {
+    if (location.hash === '#privacy-choices') openModal();
+  });
 })();
