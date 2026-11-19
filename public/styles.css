@@ -50,6 +50,15 @@ body{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:
 .tiny-pulse,.live-dot,.small-marker{background:#b68f62}
 .demo-banner{background:#fff0d7;color:#604522;border-color:#bd9962}
 .error-banner{background:#f6e6db;color:#743b20;border-color:#bf987e}
+.market-directory{padding-top:42px;padding-bottom:22px}
+.market-directory ul{display:flex;flex-wrap:wrap;gap:10px 30px;list-style:none;padding:0}
+.market-guide{max-width:820px;padding-top:clamp(36px,7vw,80px);padding-bottom:clamp(44px,7vw,84px)}
+.market-guide h1{font-size:clamp(30px,6vw,52px);line-height:1.13;margin:0 0 16px}
+.market-guide h2{color:var(--deep);font-size:clamp(21px,3vw,27px);margin:30px 0 8px}
+.market-guide p{max-width:68ch;margin:0 0 16px}
+.market-directory a,.market-guide li a{color:var(--deep);text-decoration:underline;text-underline-offset:3px}
+.market-guide a:focus-visible,.market-directory a:focus-visible{outline:2px solid var(--earth);outline-offset:3px}
+.market-guide .button{white-space:normal;text-align:center}
 /* Privacy controls */
 .privacy-banner[hidden],.privacy-modal[hidden]{display:none!important}
 .privacy-banner{position:fixed;bottom:18px;left:18px;right:18px;max-width:850px;margin:auto;z-index:2000;
