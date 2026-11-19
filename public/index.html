@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="BuildPulse Chicago tracks official building permit activity and helps contractors discover potential projects by trade, neighborhood, and reported cost.">
-  <title>BuildPulse — Chicago construction intelligence</title>
+  <meta name="description" content="BuildPulse North America tracks official building permit activity and helps contractors discover potential projects by trade, neighborhood, and reported cost.">
+  <title>BuildPulse — North American construction intelligence</title>
   <link rel="stylesheet" href="./styles.css">
   <script src="./waitlist-config.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
   <header class="site-header"><div class="container nav-bar">
-    <a class="brand" href="#home" aria-label="BuildPulse home"><span class="brand-mark">▥</span> Build<span class="brand-accent">Pulse</span><span class="brand-city">CHICAGO</span></a>
+    <a class="brand" href="#home" aria-label="BuildPulse home"><span class="brand-mark">▥</span> Build<span class="brand-accent">Pulse</span><span class="brand-city">NORTH AMERICA</span></a>
     <nav aria-label="Main navigation"><a href="#permits">Explore permits</a><a href="#how">How it works</a><a href="#pricing">Pricing</a></nav>
     <a class="nav-cta" href="#early-access">Get early access <span aria-hidden="true">↗</span></a>
   </div></header>
@@ -19,20 +19,20 @@
   <main id="home">
     <section class="hero container">
       <div class="hero-copy">
-        <div class="eyebrow"><span class="live-dot"></span> CONSTRUCTION MARKET INTELLIGENCE · CHICAGO</div>
+        <div class="eyebrow"><span class="live-dot"></span> CONSTRUCTION MARKET INTELLIGENCE · MULTI-MARKET</div>
         <h1>Know what's <em>being built.</em><br>Before your competitors do.</h1>
-        <p class="hero-description">Building permits reveal where construction activity is happening. We organize public records into a searchable dashboard for contractors, suppliers, and property-services teams.</p>
+        <p class="hero-description">Find construction activity across Chicago, Washington, D.C., Philadelphia, and Delaware—organized from separate government data sources in one place.</p>
         <div class="hero-actions"><a class="button primary" href="#permits">Explore permit activity <span aria-hidden="true">→</span></a><a class="button quiet" href="#how">See how it works <span aria-hidden="true">↗</span></a></div>
-        <div class="trust"><span>✓ Official City of Chicago data</span><span>✓ No fabricated projects</span><span>✓ No payment needed to browse</span></div>
+        <div class="trust"><span>✓ Official public data sources</span><span>✓ No fabricated projects</span><span>✓ No payment needed to browse</span></div>
       </div>
       <aside class="hero-side" aria-label="Product overview">
         <div class="hero-side-title"><span class="small-marker"></span> LOCAL SIGNAL / 01</div>
-        <div class="hero-metric">01 <span>source of truth</span></div>
+        <div class="hero-metric">04 <span>market data sources</span></div>
         <div class="hero-rule"></div>
-        <div class="hero-metric">30 <span>day rolling window</span></div>
+        <div class="hero-metric">30 <span>day view where available</span></div>
         <div class="hero-rule"></div>
         <div class="hero-metric">10 <span>trade categories</span></div>
-        <p>Built on city-published records. Categories are automated keyword classifications, not verified trade assignments.</p>
+        <p>Jurisdictions publish different fields and frequencies. Delaware's statewide data is annual, not a daily lead feed.</p>
       </aside>
     </section>
 
@@ -42,30 +42,30 @@
       <div id="error-banner" class="error-banner" role="alert" hidden></div>
       <div class="stats-grid">
         <div class="stat-card"><div>Records loaded <span class="stat-glyph">◱</span></div><strong id="stat-records">—</strong><span>In this dataset</span></div>
-        <div class="stat-card"><div>Reported project value <span class="stat-glyph">↗</span></div><strong id="stat-value">—</strong><span>Sum of reported costs; not all permits list a value</span></div>
+        <div class="stat-card"><div>Reported project value <span class="stat-glyph">↗</span></div><strong id="stat-value">—</strong><span>Reported costs where available; markets differ</span></div>
         <div class="stat-card"><div>Trade categories <span class="stat-glyph">▦</span></div><strong id="stat-trades">—</strong><span>Matching current records</span></div>
         <div class="stat-card"><div>Newest permit date <span class="stat-glyph">◷</span></div><strong id="stat-date">—</strong><span>City issue date, not discovery time</span></div>
       </div>
       <div class="dashboard-panel">
         <div class="panel-heading"><div><span class="overline">PERMIT EXPLORER</span><h3>Discover new opportunities</h3></div><button class="button outline" id="download-csv" type="button">↓ Export filtered CSV</button></div>
-        <div class="filters">
+        <div class="filters"><label><span>MARKET</span><select id="market"><option value="all">All available markets</option><option value="chicago">Chicago, IL</option><option value="dc">Washington, D.C.</option><option value="philadelphia">Philadelphia, PA</option><option value="delaware">Delaware (statewide · year only)</option></select></label>
           <label class="search-wrap"><span>SEARCH PERMITS</span><input id="search" type="search" placeholder="Try 'roof', 'renovation', 'West Loop'..." autocomplete="off"></label>
           <label><span>TRADE</span><select id="trade"><option value="">All trades</option></select></label>
           <label><span>MINIMUM VALUE</span><select id="min-cost"><option value="0">Any value</option><option value="10000">$10,000+</option><option value="50000">$50,000+</option><option value="100000">$100,000+</option><option value="500000">$500,000+</option></select></label>
           <label><span>WARD</span><select id="ward"><option value="">All wards</option></select></label>
         </div>
-        <div class="result-meta"><span id="result-count">Loading records...</span><span>Sorted by issue date · newest first</span></div>
-        <div class="table-wrap"><table><thead><tr><th>ISSUED</th><th>LOCATION / DESCRIPTION</th><th>CATEGORY</th><th>REPORTED COST</th><th>SOURCE</th></tr></thead><tbody id="rows"></tbody></table></div>
+        <div class="result-meta"><span id="result-count">Loading records...</span><span id="sorting-label">Sorted newest first · Delaware is year-only</span></div>
+        <div class="table-wrap"><table><thead><tr><th>DATE / YEAR</th><th>LOCATION / DESCRIPTION</th><th>CATEGORY</th><th>REPORTED COST</th><th>SOURCE</th></tr></thead><tbody id="rows"></tbody></table></div>
         <div id="empty-state" class="empty-state" hidden>No matching permits. Adjust the filters and try again.</div>
         <div class="pagination"><button id="prev-page" class="page-button" type="button" disabled>← Previous</button><span id="page-label">Page 1</span><button id="next-page" class="page-button" type="button" disabled>Next →</button></div>
       </div>
-      <p class="small-note">Source: <a href="https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu" target="_blank" rel="noopener noreferrer">City of Chicago — Building Permits</a>. Permit records can be delayed or corrected. Reported costs are unverified and may be missing; classifications are heuristic. BuildPulse is independent of the City of Chicago.</p>
+      <p class="small-note">Sources: <a href="https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu" target="_blank" rel="noopener noreferrer">Chicago</a>, <a href="https://opendata.dc.gov/datasets/DCGIS::building-permits-in-last-30-days" target="_blank" rel="noopener noreferrer">D.C.</a>, <a href="https://data.phila.gov/visualizations/li-building-permits/" target="_blank" rel="noopener noreferrer">Philadelphia</a>, <a href="https://stateplanning.delaware.gov/development-trends/index.shtml" target="_blank" rel="noopener noreferrer">Delaware</a>. Coverage differs by region. Delaware reports permit locations by year, not recent daily leads. The collector may retain old data when a source fails. BuildPulse is unaffiliated with these governments.</p>
     </div></section>
 
     <section class="how container" id="how"><div class="how-title"><span class="overline">ENGINEERED FOR CLARITY</span><h2>From raw records to<br><em>usable intelligence.</em></h2><p>Instead of digging through municipal data portals, explore a focused view of construction activity that refreshes automatically when deployed.</p></div><div class="steps">
-      <div class="step"><div class="step-index">01 / COLLECT</div><h3>Official city records</h3><p>A scheduled collector fetches newly issued permits from Chicago's public data API.</p></div>
+      <div class="step"><div class="step-index">01 / COLLECT</div><h3>Official city records</h3><p>Scheduled collectors fetch permit records from multiple city and state public data sources.</p></div>
       <div class="step"><div class="step-index">02 / ORGANIZE</div><h3>Clean and categorize</h3><p>Normalize dates, costs, and descriptions; assign indicative trades with transparent keyword rules.</p></div>
-      <div class="step"><div class="step-index">03 / EXPLORE</div><h3>Find relevant activity</h3><p>Search by project work, location, value, and trade, then export the filtered list.</p></div>
+      <div class="step"><div class="step-index">03 / EXPLORE</div><h3>Find relevant activity</h3><p>Filter by market, location, work, cost where provided, and trade, then export matching records.</p></div>
     </div></section>
 
     <section class="pricing-section" id="pricing"><div class="container"><div class="section-top"><div><span class="overline">EARLY ACCESS</span><h2>Made for independent operators.</h2><p>We are testing which reports and alerts are worth paying for. No paid subscription is active yet.</p></div></div>
@@ -91,6 +91,6 @@
       <p class="small-note">We collect only the details above to assess interest and contact volunteers about BuildPulse. No payment is requested or taken. <a href="./privacy.html">Privacy notice</a>.</p>
     </form></section>
   </main>
-  <footer><div class="container footer"><div class="brand">▥ Build<span class="brand-accent">Pulse</span></div><p>Unofficial project-monitoring tool. Public data © its respective publisher. No affiliation with the City of Chicago.</p><a href="https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu" target="_blank" rel="noopener noreferrer">Official source ↗</a></div></footer>
+  <footer><div class="container footer"><div class="brand">▥ Build<span class="brand-accent">Pulse</span></div><p>Unofficial project-monitoring tool. Public data © its respective publisher. No affiliation with the listed jurisdictions.</p><a href="https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu" target="_blank" rel="noopener noreferrer">Official source ↗</a></div></footer>
 </body>
 </html>
