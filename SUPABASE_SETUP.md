@@ -1,4 +1,4 @@
-# BuildPulse — private research signup setup (free tier)
+# BuildThePulse — private research signup setup (free tier)
 
 ## Current state
 - Public dashboard: **live** at https://buildpulse-chicago.onrender.com
