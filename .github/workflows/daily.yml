@@ -8,6 +8,7 @@ on:
     paths:
       - '.github/workflows/daily.yml'
       - 'scripts/collect.py'
+      - 'scripts/collect_markets.py'
       - 'tests/test_collect.py'
 
 permissions:
@@ -32,9 +33,11 @@ jobs:
         run: node --check public/app.js && node --check public/waitlist-config.js
       - name: Collect official data
         run: python scripts/collect.py --days 30
+      - name: Collect D.C. Philadelphia and Delaware feeds
+        run: python scripts/collect_markets.py --days 30
       - name: Commit updated public data
         run: |
           git config user.name 'buildpulse-bot'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add public/data/permits.json
+          git add public/data/permits.json public/data/dc.json public/data/philadelphia.json public/data/delaware.json
           git diff --cached --quiet || (git commit -m 'Automated permit refresh' && git push)
