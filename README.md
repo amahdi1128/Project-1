@@ -1,133 +1,57 @@
-# BuildPulse Chicago — free, nonlegal data-business MVP
+# BuildPulse Chicago
 
-**Status:** working code package, **not deployed**, **not earning revenue**, **no paid subscriptions implemented**.
+**Live website:** https://buildpulse-chicago.onrender.com  
+**Project:** Experimental $0-upfront public-data business for construction contractors.  
+**Status as of November 19, 2026:** Public permit dashboard and daily data collection are live. Customer research waitlist code is prepared but deliberately **not accepting signups** until secure database storage is deployed. There are **no paid subscriptions and no revenue claims**.
 
-BuildPulse is a small public-data dashboard for Chicago building permits. It targets contractors, trade suppliers, and small construction sales teams. The dashboard runs as static files, and the data collector uses only the Python standard library.
+## What's working
+- Searchable Chicago building-permit explorer, including trade/ward/cost filtering and CSV export.
+- Official public-data ingestion from City of Chicago Socrata API `ydr8-5enu`.
+- Automatic permit updates via GitHub Actions daily schedule.
+- Automatic Render Static Site deployment on changes to `main`.
+- Original permit source links, honest classification disclaimers, and no fabricated records once live data is collected.
+- Tests for the Python collector.
 
-## What works today
+## Customer and positioning
+Target initial buyer: Chicago roofing, HVAC, electrical and related independent contractors or trade suppliers. Hypothesis: a useful alert service with filtered opportunities could command $39/month for individuals and $99/month for teams. **These are hypothetical prices, not active paid plans.** A permit is not necessarily a job open to bid.
 
-- Responsive public website with source attribution and explicit demonstration-mode disclosure.
-- Search permits by location/description/ID, filter by trade, ward, and minimum reported cost.
-- Sort newest first, paginate, export matching permits to CSV.
-- Python collector fetches real records from the Chicago official Socrata dataset `ydr8-5enu`, normalizes public fields and applies transparent rule-based trade categories.
-- A GitHub Actions workflow schedules a daily refresh and commits `public/data/permits.json` when it changes.
-- Optional Cloudflare Pages Function saves user-provided work emails and trade preferences to a free Cloudflare D1 waitlist.
-- Unit tests covering classification, normalization, and malformed costs.
+## Current privacy-first survey
+The website now includes a research form with work email, trade, optional company, price willingness, interest in a pilot, and affirmative contact consent. The button is intentionally disabled until a secure private data store and support contact exist. No personal signup data is saved to the public GitHub repository.
 
-## What is **not** implemented
+The optional **Supabase integration is ready as code**:
+- `sql/supabase_waitlist.sql` — database table and access controls.
+- `supabase/functions/buildpulse-waitlist/index.ts` — validated server-side collection endpoint.
+- `supabase/config.toml` — public endpoint JWT setting.
+- `public/waitlist-config.js` — empty by default; populate only with a public function URL after setup.
+- `public/privacy.html` — privacy notice.
 
-- **No live production website** until you deploy it.
-- **No payment processing, premium access, subscription billing, or automatic customer acquisition.** The $39/$99 plans shown are research concepts only.
-- **No paid AI model integration.** ChatGPT Plus helps build and review code, but is *not* an OpenAI API key and does not enable unattended AI inference.
-- **No automated paid email alerts.** This is a possible next feature after customer validation.
-- A separate domain is optional. The default `*.pages.dev` subdomain can be free.
+See **[SUPABASE_SETUP.md](SUPABASE_SETUP.md)** for activation and testing instructions. Do **not** publish service-role keys or other secrets in this repository.
 
-## Run locally (no credit card, no dependencies)
+## Daily workflow
+```text
+.github/workflows/daily.yml
+   -> test Python data normalization
+   -> fetch last 30 days of official Chicago permit records
+   -> normalize & classify by indicative trade
+   -> update public/data/permits.json
+   -> commit new data to GitHub
+   -> Render automatically deploys changed site files
+```
 
-From the extracted project root:
-
+Test collection locally using Python 3.12+:
 ```sh
 python -m unittest discover -s tests -v
-cd public
-python -m http.server 8000
-```
-
-Go to `http://localhost:8000/` in your browser. The included six rows are explicitly labeled **fictional demo records**. They are not scraped facts.
-
-To replace them with real Chicago permit data, from the project root, with internet access:
-
-```sh
 python scripts/collect.py --days 30
+cd public && python -m http.server 8000
 ```
 
-The collector fetches the city's actual published data and saves `public/data/permits.json`; refresh the browser to see the real data. **This coding sandbox cannot reach the API, so no live rows have been fabricated or bundled.**
+**Source:** https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu
 
-## Deploy at $0 additional recurring software cost (subject to free-tier limits)
+## Privacy and accuracy
+Only public permit site data is exported. Contact names, phone numbers and applicant emails are excluded from permit ingestion. Classifications are heuristic; dates and project costs are provided by the city and may be revised. BuildPulse is independent of the City of Chicago.
 
-### 1. GitHub (free account)
+## Costs
+The public prototype uses GitHub Actions and Render Static Sites on available free tiers. Supabase also offers a limited free plan, subject to allowances and policy changes. No commercial AI API is in use; ChatGPT Plus does not grant OpenAI API credits. Do not configure paid infrastructure without first checking pricing. Stripe checkout is **not configured** and no payment should be collected for unbuilt features.
 
-1. Create an empty **public** repository with a simple name such as `buildpulse-chicago`.
-2. Upload all project files, **including the hidden `.github/workflows/daily.yml` folder**. If dragging files in your browser, ensure hidden files are included.
-3. Go to **Actions**. Enable workflows if GitHub asks you to approve them.
-4. Open **Refresh Chicago permits** and click **Run workflow** for an initial collection.
-5. Inspect the action log. If the city API is temporarily unavailable, the collector deliberately fails without replacing the existing dataset. Retry when available.
-6. Visit the repository and verify `public/data/permits.json` contains `"mode":"live"`.
-
-GitHub standard hosted runners are free for public repositories within GitHub's policy and usage rules, but GitHub can change its terms. Scheduled workflows are best-effort and may run late. GitHub can disable inactivity-related workflows in public repositories; periodically check runs.
-
-### 2. Cloudflare Pages (free plan)
-
-1. Create a free Cloudflare account.
-2. Open **Workers & Pages → Create → Pages → Connect to Git**.
-3. Select your GitHub repository.
-4. Build framework: **None**. Build command: **leave empty**. Build output directory: **`public`**.
-5. Deploy. Cloudflare gives you an address similar to `https://buildpulse-chicago.pages.dev` (the actual subdomain depends on availability).
-6. Open the site; make sure the data banner says real data, and the newest issue date is reasonable.
-
-**Do not use GitHub Pages as your paid SaaS storefront.** Use Cloudflare Pages; GitHub Pages' usage policies restrict running online businesses.
-
-### 3. Optional: enable free waitlist capture via D1
-
-1. Cloudflare dashboard → Workers & Pages → D1 → create a database (name e.g. `buildpulse-waitlist`).
-2. Execute the statement in `sql/schema.sql` using the D1 console (database must exist before the code works).
-3. Pages project → Settings → Bindings → add **D1 database**, variable name exactly **`DB`**, select the new database.
-4. Redeploy the Pages project and submit a test email through the website.
-5. Check the D1 database for the row. The site does not send a confirmation email or marketing mail; add affirmative email consent and unsubscribe infrastructure before marketing emails.
-
-Until D1 is configured, the waitlist form clearly reports an error. Do **not** claim registrations are working until tested.
-
-## Product positioning and market test
-
-**Buyer:** small Chicago roofing/HVAC/electrical subcontractors, general contractors, construction suppliers, and commercial property service firms.
-
-**Pitch:** "Filter recently issued Chicago building permits by trade and reported project value in seconds instead of navigating raw city data."
-
-**Initial validation targets, not forecasts:**
-- Interview 10 people who actively track construction leads.
-- Get 3 users to say which alerts, filtering, and exports would be worth paying for.
-- Ask whether $39/month for matched daily alerts and $99/month for a team feed is credible.
-- Secure at least one explicit paid pilot commitment **before** developing a paywall.
-
-**Potential monetization once validated:** Stripe Payment Links for checkout (no upfront fee, transaction fees apply), Stripe webhooks for access, a customer account system, and opt-in alert emails. These do not exist in the current prototype; do not collect payment for a nonexistent service.
-
-**Growth channels:** publish weekly permit statistics using verified aggregate counts, invite legitimate trade businesses to test searches, demonstrate the time saved, and ask happy users for referrals. Avoid automated unsolicited residential outreach and be mindful of email marketing laws and privacy.
-
-**Important limitation:** there are already construction-permit data products. A public-data dashboard by itself is unlikely to command high subscription prices. Validate a narrow workflow customers find genuinely useful (e.g., reviewed trade-specific alerts, frequency, trends, territory filters) before charging.
-
-## Privacy and data accuracy
-
-The collector excludes permit contact names, phone numbers, applicant emails, and other personal contact fields. It retains permit site street addresses from the official data because they are project locations; do not use the service to harass homeowners. The public permit data can be revised or delayed, and project valuations are reported estimates. Automatic trade classification is heuristic and may be wrong. Always include the City of Chicago source attribution and avoid implying official endorsement.
-
-This is market intelligence, not a guarantee of a job, available contract, or bid invitation.
-
-## Files
-
-```
-.github/workflows/daily.yml  Automated morning refresh
-scripts/collect.py          Free data collection / normalization / classification
-public/index.html           Responsive landing page and data explorer
-public/styles.css           Site design
-public/app.js               Filtering, pagination, CSV export, waitlist form
-public/data/permits.json    Explicit demo feed; replaced by collector when run online
-functions/api/waitlist.js   Optional Cloudflare Pages waitlist endpoint
-sql/schema.sql              Optional D1 schema
-sales_playbook.md           Early customer-discovery scripts and marketing plan
-tests/test_collect.py       Offline tests
-```
-
-## Troubleshooting
-
-- **Blank dashboard opened by double-clicking HTML:** use `python -m http.server 8000`, because browser security can block `fetch()` for `file://` URLs.
-- **City API returns error:** check that dataset `ydr8-5enu` is still published and field names haven't changed. Existing JSON is not overwritten when a fetch fails.
-- **Only demo records after deployment:** run the GitHub workflow manually, check that it has `contents: write` permission, and that the automated commit was pushed. Cloudflare should redeploy following a repo update; trigger a manual redeploy if necessary.
-- **Waitlist 503 error:** D1 database and `DB` Pages binding have not been configured.
-- **Actions schedule doesn't run:** public repo schedules are not guaranteed at the exact specified minute and may be disabled if the repository becomes inactive. Trigger it manually.
-
-## Data and references
-
-- City of Chicago dataset: https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu
-- Socrata API: https://data.cityofchicago.org/resource/ydr8-5enu.json
-- GitHub Actions billing: https://docs.github.com/en/actions/concepts/billing-and-usage
-- Cloudflare Pages free limits: https://developers.cloudflare.com/pages/platform/limits/
-
-**Built as a $0-upfront prototype using public data and free software tiers.** This is not a launched company, validated offer, or automated revenue stream yet.
+## Next business milestone
+Speak with ten real contractors, identify one repeatable alert workflow, obtain three credible pilot prospects, and then build a minimum trade-specific email-alert service. See `sales_playbook.md`.
