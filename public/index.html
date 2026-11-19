@@ -5,18 +5,19 @@
 <link rel="canonical" href="https://buildthepulse.onrender.com/">
 <script>if(location.hostname==='buildpulse-chicago.onrender.com') location.replace('https://buildthepulse.onrender.com'+location.pathname+location.search+location.hash);</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="BuildThePulse North America tracks official building permit activity and helps contractors discover potential projects by trade, neighborhood, and reported cost.">
+  <meta name="description" content="BuildThePulse is a completely free construction permit dashboard for Chicago, Washington, D.C., Philadelphia and Delaware. Search, filter and export official data without a paywall.">
   <title>BuildThePulse — North American construction intelligence</title>
   <link rel="stylesheet" href="./styles.css">
   <script src="./waitlist-config.js" defer></script>
   <script src="./app.js" defer></script>
   <script src="./privacy-controls.js" defer></script>
+  <script src="./growth.js" defer></script>
 </head>
 <body>
   <header class="site-header"><div class="container nav-bar">
     <a class="brand" href="#home" aria-label="BuildThePulse home"><span class="brand-mark">▥</span> Build<span class="brand-accent">ThePulse</span><span class="brand-city">NORTH AMERICA</span></a>
-    <nav aria-label="Main navigation"><a href="#permits">Explore permits</a><a href="#how">How it works</a><a href="#pricing">Pricing</a></nav>
-    <a class="nav-cta" href="#early-access">Get early access <span aria-hidden="true">↗</span></a>
+    <nav aria-label="Main navigation"><a href="#permits">Explore permits</a><a href="#free">Why free?</a><a href="./advertise.html">Advertise</a></nav>
+    <a class="nav-cta" href="./advertise.html">Become a sponsor <span aria-hidden="true">↗</span></a>
   </div></header>
 
   <main id="home">
@@ -26,11 +27,11 @@
         <h1>Know what's <em>being built.</em><br>Before your competitors do.</h1>
         <p class="hero-description">Find construction activity across Chicago, Washington, D.C., Philadelphia, and Delaware—organized from separate government data sources in one place.</p>
         <div class="hero-actions"><a class="button primary" href="#permits">Explore permit activity <span aria-hidden="true">→</span></a><a class="button quiet" href="#how">See how it works <span aria-hidden="true">↗</span></a></div>
-        <div class="trust"><span>✓ Official public data sources</span><span>✓ No fabricated projects</span><span>✓ No payment needed to browse</span></div>
+        <div class="trust"><span>✓ Official public data sources</span><span>✓ No fabricated projects</span><span>✓ 100% free to search and export</span></div>
       </div>
       <aside class="hero-side" aria-label="Product overview">
         <div class="hero-side-title"><span class="small-marker"></span> LOCAL SIGNAL / 01</div>
-        <div class="hero-metric">04 <span>market data sources</span></div>
+        <div class="hero-metric">04 <span>geographic markets</span></div>
         <div class="hero-rule"></div>
         <div class="hero-metric">30 <span>day view where available</span></div>
         <div class="hero-rule"></div>
@@ -40,7 +41,7 @@
     </section>
 
     <section class="dashboard-section" id="permits"><div class="container">
-      <div class="section-top"><div><span class="overline">THE SIGNAL BOARD</span><h2>A clearer view of the pipeline.</h2><p>Sort, filter, and export public permits. No account required for the preview.</p></div><div class="source-indicator"><span class="tiny-pulse"></span><span id="update-status">Loading data...</span></div></div>
+      <div class="section-top"><div><span class="overline">THE SIGNAL BOARD</span><h2>A clearer view of the pipeline.</h2><p>Sort, filter, and export public permits for free—no account or paywall.</p></div><div class="source-indicator"><span class="tiny-pulse"></span><span id="update-status">Loading data...</span></div></div>
       <div id="demo-banner" class="demo-banner" role="status" hidden><strong>Preview mode:</strong> The records below are fictional examples, not actual city permits. The automated collector replaces them with official data after deployment.</div>
       <div id="error-banner" class="error-banner" role="alert" hidden></div>
       <div class="stats-grid">
@@ -49,6 +50,13 @@
         <div class="stat-card"><div>Trade categories <span class="stat-glyph">▦</span></div><strong id="stat-trades">—</strong><span>Matching current records</span></div>
         <div class="stat-card"><div>Newest permit date <span class="stat-glyph">◷</span></div><strong id="stat-date">—</strong><span>City issue date, not discovery time</span></div>
       </div>
+      <aside class="sponsor-slot" id="sponsor-slot" aria-label="Contextual sponsorship placement">
+        <div><div class="sponsor-overline" id="sponsor-label">SPONSORSHIP AVAILABLE</div>
+          <h3 id="sponsor-brand">Put your business in front of construction professionals</h3>
+          <p id="sponsor-copy">Reach people browsing permits in your market. This space is available for clearly labeled sponsorship; no advertiser is currently displayed here.</p>
+        </div>
+        <a id="sponsor-link" href="./advertise.html?market=all">Advertise in this market ↗</a>
+      </aside>
       <div class="dashboard-panel">
         <div class="panel-heading"><div><span class="overline">PERMIT EXPLORER</span><h3>Discover new opportunities</h3></div><button class="button outline" id="download-csv" type="button">↓ Export filtered CSV</button></div>
         <div class="filters"><label><span>MARKET</span><select id="market"><option value="all">All available markets</option><option value="chicago">Chicago, IL</option><option value="dc">Washington, D.C.</option><option value="philadelphia">Philadelphia, PA</option><option value="delaware">Delaware (Sussex recent + statewide annual)</option></select></label>
@@ -71,12 +79,17 @@
       <div class="step"><div class="step-index">03 / EXPLORE</div><h3>Find relevant activity</h3><p>Filter by market, location, work, cost where provided, and trade, then export matching records.</p></div>
     </div></section>
 
-    <section class="pricing-section" id="pricing"><div class="container"><div class="section-top"><div><span class="overline">EARLY ACCESS</span><h2>Made for independent operators.</h2><p>We are testing which reports and alerts are worth paying for. No paid subscription is active yet.</p></div></div>
-      <div class="pricing-grid">
-        <article class="price-card"><span class="overline">CURRENT PREVIEW</span><h3>Explorer</h3><p class="price">Free</p><p>Browse public records, search and export the current dataset.</p><ul><li>Public permit dashboard</li><li>Search and trade filters</li><li>CSV export</li></ul><a class="button outline full" href="#permits">Explore free</a></article>
-        <article class="price-card featured"><div class="beta-label">CONCEPT — NOT YET FOR SALE</div><span class="overline">PROPOSED PLAN</span><h3>Trade Alerts</h3><p class="price">$39 <span>/ month, proposed</span></p><p>Personalized alerts for contractors who want to focus on specific kinds of projects.</p><ul><li>Daily trade-specific email alerts</li><li>Saved search profiles</li><li>Weekly market summary</li></ul><a class="button primary full" href="#early-access">Request early access →</a></article>
-        <article class="price-card"><span class="overline">FUTURE CONCEPT</span><h3>Team Intelligence</h3><p class="price">$99 <span>/ month, proposed</span></p><p>Permit trend exports and shared monitoring for small sales teams.</p><ul><li>Multiple watchlists</li><li>Team reports</li><li>Historical trend exports</li></ul><a class="button outline full" href="#early-access">Join interest list</a></article>
+    <section class="free-section" id="free"><div class="container">
+      <span class="overline">FREE FOR EVERYONE</span>
+      <h2>Construction intelligence should be accessible.</h2>
+      <p>BuildThePulse is free to use, including permit search, market filters and CSV exports. We plan to support the project through clearly marked advertising and local industry sponsorships—not paid access to public records.</p>
+      <div class="free-perks">
+        <article class="free-perk"><span class="perk-icon">✓</span><h3>No paywall</h3><p>Browse available government permit records across all four markets without a subscription.</p></article>
+        <article class="free-perk"><span class="perk-icon">↗</span><h3>Free CSV exports</h3><p>Download filtered public records for your own analysis, subject to source limitations.</p></article>
+        <article class="free-perk"><span class="perk-icon">◷</span><h3>Data updates</h3><p>Automated public-data refreshes, with clear labels for sources that publish historical information.</p></article>
       </div>
+      <div class="free-statement"><a class="button primary" href="#permits">Explore permits for free →</a><a class="button outline" href="./advertise.html">Sponsor this free resource ↗</a></div>
+      <p class="small-note">Advertisements will be labeled. Advertisers cannot alter or prioritize government permit records. No sponsored company is currently endorsed or displayed as an actual advertiser.</p>
     </div></section>
 
     <section class="waitlist container" id="early-access"><div><span class="overline">HELP SHAPE THE PRODUCT</span><h2>Tell us which projects matter.</h2><p>Interested in automated trade alerts? Join the research waitlist. No payment required and no paid subscription will begin automatically.</p></div><form id="waitlist-form" class="waitlist-form" action="#" method="post">
