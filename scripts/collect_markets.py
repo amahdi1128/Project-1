@@ -20,7 +20,7 @@ from collect import ROOT, atomic_write, classify, safe_cost
 
 DATA = ROOT / "public" / "data"
 DC = "https://maps2.dcgis.dc.gov/dcgis/rest/services/FEEDS/DCRA/FeatureServer/4"
-DE = "https://enterprise.firstmaptest.delaware.gov/arcgis/rest/services/PlanningCadastre/DE_Planning_Development/FeatureServer/3"
+DE = "https://enterprise.firstmap.delaware.gov/arcgis/rest/services/PlanningCadastre/DE_Planning_Development/FeatureServer/3"
 PHL = "https://phl.carto.com/api/v2/sql"
 
 SOURCES = {
@@ -149,7 +149,7 @@ def fetch_philadelphia(days=30):
 def fetch_delaware():
     # State-level data does not have per-permit issue dates. This is historical,
     # not a live lead feed; use latest available reported years.
-    rows = arcgis_rows(DE, "1=1", "P_YEAR DESC", 4000)
+    rows = arcgis_rows(DE, "P_YEAR >= '2023'", "P_YEAR DESC, OBJECTID DESC", 9000)
     result = []
     for raw in rows:
         ident = str(raw.get("OBJECTID") or "").strip()
@@ -184,7 +184,7 @@ def build(market, items):
             "row_count": len(items), "latest_issue_date": items[0]["issue_date"],
             "date_precision": "year" if market == "delaware" else "day",
             "disclaimer": (
-                "Statewide permit locations reported by YEAR, not daily issues; not a live construction lead feed."
+                "Statewide building permits for new structures, reported by YEAR, not daily issues; not a live construction lead feed."
                 if market == "delaware" else
                 "Official public records may lag or be amended; trade categories are heuristic."
             ),
