@@ -47,7 +47,12 @@ within individual feeds. Only Chicago carries reported costs, with values on
 2,332 of its 2,716 records. Treat totals as reported Chicago values for the
 selected records and keep cross-market comparisons explicit.
 
-Review the PR checks, then validate collector source-field compatibility and
-the Edge Functions in isolated staging. The cloud environment denied the
-read-only municipal API probes. The Edge Function tests use Node's web APIs
-and a mocked Supabase write, so they do not verify deployed JWT, RLS or quotas.
+A read-only run of all five collectors on November 19, 2026 yielded 2,716
+Chicago records, 4,201 D.C. records, 3,770 Philadelphia records, 6,101 annual
+Delaware records, and 2,790 Sussex records. The Sussex snapshot in the
+repository contains 501 records. The validation run kept generated data in
+memory and did not replace any snapshots.
+
+Review the PR checks and validate the Edge Functions in isolated staging.
+The Edge Function tests use Node's web APIs and a mocked Supabase write, so
+they do not verify deployed JWT, RLS or quotas.
