@@ -1,4 +1,4 @@
-# BuildPulse Chicago
+# BuildThePulse Chicago
 
 **Live website:** https://buildpulse-chicago.onrender.com  
 **Project:** Experimental $0-upfront public-data business for construction contractors.  
@@ -48,7 +48,7 @@ cd public && python -m http.server 8000
 **Source:** https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu
 
 ## Privacy and accuracy
-Only public permit site data is exported. Contact names, phone numbers and applicant emails are excluded from permit ingestion. Classifications are heuristic; dates and project costs are provided by the city and may be revised. BuildPulse is independent of the City of Chicago.
+Only public permit site data is exported. Contact names, phone numbers and applicant emails are excluded from permit ingestion. Classifications are heuristic; dates and project costs are provided by the city and may be revised. BuildThePulse is independent of the City of Chicago.
 
 ## Costs
 The public prototype uses GitHub Actions and Render Static Sites on available free tiers. Supabase also offers a limited free plan, subject to allowances and policy changes. No commercial AI API is in use; ChatGPT Plus does not grant OpenAI API credits. Do not configure paid infrastructure without first checking pricing. Stripe checkout is **not configured** and no payment should be collected for unbuilt features.
