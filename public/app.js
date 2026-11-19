@@ -86,19 +86,56 @@ function exportCSV() {
   const a=el('a');a.href=url;a.download=`buildpulse-chicago-${state.meta.mode==='demo'?'DEMO':'permits'}.csv`;
   document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
 }
+function validWaitlistEndpoint() {
+  const raw = String(window.BUILDPULSE_WAITLIST_ENDPOINT || '').trim();
+  // Only send personal data to the expressly configured Supabase project.
+  if (!/^https:\/\/[a-z0-9-]+\.supabase\.co\/functions\/v1\/buildpulse-waitlist\/?$/.test(raw)) return null;
+  return raw;
+}
 async function subscribe(event) {
   event.preventDefault();
-  const form=event.currentTarget;
-  const note=$('form-state');
-  note.textContent='Submitting...';
-  const data=Object.fromEntries(new FormData(form).entries());
+  const form = event.currentTarget;
+  const note = $('form-state');
+  const endpoint = validWaitlistEndpoint();
+  if (!endpoint) {
+    note.textContent = 'The research signup is not open yet. No information has been sent.';
+    return;
+  }
+  const submit = form.querySelector('button[type="submit"]');
+  submit.disabled = true;
+  note.textContent = 'Submitting your research request...';
+  const formData = new FormData(form);
+  const data = {
+    email: String(formData.get('email') || ''),
+    trade: String(formData.get('trade') || ''),
+    company: String(formData.get('company') || ''),
+    requested_plan: String(formData.get('requested_plan') || 'not_sure'),
+    wants_pilot: formData.get('wants_pilot') === 'yes',
+    consent_to_contact: formData.get('consent_to_contact') === 'yes',
+    website: String(formData.get('website') || ''),
+  };
   try {
-    const res=await fetch('./api/waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-    const payload=await res.json();
-    if(!res.ok||!payload.ok) throw new Error(payload.error||'Unable to subscribe.');
-    form.reset();note.textContent='Thanks. Your early-access request has been saved.';
-  } catch(err) {
-    note.textContent=`Signups are not active yet: ${err.message}. The site owner must configure Cloudflare D1.`;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 12000);
+    let res;
+    try {
+      res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timer);
+    }
+    const payload = await res.json();
+    if (!res.ok || !payload.ok) throw new Error(payload.error || 'Could not save your request.');
+    form.reset();
+    note.textContent = 'Thank you. Your early-access interest has been recorded. No payment has been taken.';
+  } catch (err) {
+    note.textContent = `Your request was not confirmed. Please try again later. (${err.message})`;
+  } finally {
+    submit.disabled = false;
   }
 }
 async function start() {
@@ -107,7 +144,16 @@ async function start() {
   $('prev-page').addEventListener('click',()=>{state.page--;render();});
   $('next-page').addEventListener('click',()=>{state.page++;render();});
   $('download-csv').addEventListener('click',exportCSV);
-  $('waitlist-form').addEventListener('submit',subscribe);
+  const waitlistForm = $('waitlist-form');
+  waitlistForm.addEventListener('submit', subscribe);
+  if (!validWaitlistEndpoint()) {
+    const button = waitlistForm.querySelector('button[type="submit"]');
+    button.disabled = true;
+    button.title = 'Waitlist signup opens when the secure database is connected';
+    $('form-state').textContent = 'Signup is not yet active. No information is being collected.';
+  } else {
+    $('form-state').textContent = 'No payment is required. Your information is stored privately for pilot research.';
+  }
   try {
     const res=await fetch('./data/permits.json',{cache:'no-store'});
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
