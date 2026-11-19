@@ -1,0 +1,38 @@
+name: Refresh Chicago permits
+
+on:
+  schedule:
+    - cron: '18 13 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/daily.yml'
+      - 'scripts/collect.py'
+      - 'tests/test_collect.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: buildpulse-permit-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
+      - name: Collect official data
+        run: python scripts/collect.py --days 30
+      - name: Commit updated public data
+        run: |
+          git config user.name 'buildpulse-bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/data/permits.json
+          git diff --cached --quiet || (git commit -m 'Automated permit refresh' && git push)
