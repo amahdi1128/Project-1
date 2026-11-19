@@ -31,7 +31,7 @@ jobs:
       - name: Run tests
         run: python -m unittest discover -s tests -v
       - name: Check browser JavaScript syntax
-        run: node --check public/app.js && node --check public/waitlist-config.js && node --check public/privacy-controls.js && node --check public/privacy-request.js
+        run: node --check public/app.js && node --check public/waitlist-config.js && node --check public/privacy-controls.js && node --check public/privacy-request.js && node --check public/growth.js && node --check public/advertise.js
       - name: Collect official data
         run: python scripts/collect.py --days 30
       - name: Collect D.C. Philadelphia and Delaware feeds
