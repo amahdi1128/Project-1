@@ -9,6 +9,7 @@ on:
       - '.github/workflows/daily.yml'
       - 'scripts/collect.py'
       - 'scripts/collect_markets.py'
+      - 'scripts/collect_sussex.py'
       - 'tests/test_collect.py'
 
 permissions:
@@ -35,9 +36,13 @@ jobs:
         run: python scripts/collect.py --days 30
       - name: Collect D.C. Philadelphia and Delaware feeds
         run: python scripts/collect_markets.py --days 30
+      - name: Collect recent Sussex County permits (optional feed)
+        continue-on-error: true
+        run: python scripts/collect_sussex.py
       - name: Commit updated public data
         run: |
           git config user.name 'buildpulse-bot'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add public/data/permits.json public/data/dc.json public/data/philadelphia.json public/data/delaware.json
+          if test -f public/data/sussex.json; then git add public/data/sussex.json; fi
           git diff --cached --quiet || (git commit -m 'Automated permit refresh' && git push)
