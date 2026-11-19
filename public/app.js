@@ -152,6 +152,9 @@ async function start() {
     button.title = 'Waitlist signup opens when the secure database is connected';
     $('form-state').textContent = 'Signup is not yet active. No information is being collected.';
   } else {
+    const button = waitlistForm.querySelector('button[type="submit"]');
+    button.disabled = false;
+    button.textContent = 'Join the research waitlist →';
     $('form-state').textContent = 'No payment is required. Your information is stored privately for pilot research.';
   }
   try {
