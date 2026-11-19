@@ -109,12 +109,12 @@ async function subscribe(event) {
   const note = $('form-state');
   const endpoint = validWaitlistEndpoint();
   if (!endpoint) {
-    note.textContent = 'The research signup is not open yet. No information has been sent.';
+    note.textContent = 'The free updates interest list is temporarily unavailable. No information has been sent.';
     return;
   }
   const submit = form.querySelector('button[type="submit"]');
   submit.disabled = true;
-  note.textContent = 'Submitting your research request...';
+  note.textContent = 'Submitting your free updates request...';
   const formData = new FormData(form);
   const data = {
     email: String(formData.get('email') || ''),
@@ -160,13 +160,13 @@ async function start() {
   if (!validWaitlistEndpoint()) {
     const button = waitlistForm.querySelector('button[type="submit"]');
     button.disabled = true;
-    button.title = 'Waitlist signup opens when the secure database is connected';
-    $('form-state').textContent = 'Signup is not yet active. No information is being collected.';
+    button.title = 'Free updates signup is currently unavailable';
+    $('form-state').textContent = 'Free updates signup is temporarily unavailable.';
   } else {
     const button = waitlistForm.querySelector('button[type="submit"]');
     button.disabled = false;
-    button.textContent = 'Join the research waitlist →';
-    $('form-state').textContent = 'No payment is required. Your information is stored privately for pilot research.';
+    button.textContent = 'Join the free updates interest list →';
+    $('form-state').textContent = 'No payment is required. Your email and trade are stored privately to contact you about future free updates.';
   }
   const feeds = [
     ['chicago', './data/permits.json'],
