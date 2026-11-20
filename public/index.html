@@ -23,13 +23,14 @@
   <script src="./growth.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#home">Skip to main content</a>
   <header class="site-header"><div class="container nav-bar">
     <a class="brand" href="#home" aria-label="BuildThePulse home"><span class="brand-mark">▥</span> Build<span class="brand-accent">ThePulse</span><span class="brand-city">NORTH AMERICA</span></a>
     <nav aria-label="Main navigation"><a href="#permits">Explore permits</a><a href="#markets">Markets</a><a href="#free">Why free?</a><a href="./advertise.html">Advertise</a></nav>
     <a class="nav-cta" href="./advertise.html">Become a sponsor <span aria-hidden="true">↗</span></a>
   </div></header>
 
-  <main id="home">
+  <main id="home" tabindex="-1">
     <section class="hero container">
       <div class="hero-copy">
         <div class="eyebrow"><span class="live-dot"></span> CONSTRUCTION MARKET INTELLIGENCE · MULTI-MARKET</div>
@@ -50,8 +51,9 @@
     </section>
 
     <section class="dashboard-section" id="permits"><div class="container">
-      <div class="section-top"><div><span class="overline">THE SIGNAL BOARD</span><h2>A clearer view of the pipeline.</h2><p>Sort, filter, and export public permits for free—no account or paywall.</p></div><div class="source-indicator"><span class="tiny-pulse"></span><span id="update-status">Loading data...</span></div></div>
+      <div class="section-top"><div><span class="overline">THE SIGNAL BOARD</span><h2>Search public building permits</h2><p>Sort, filter, and export public permits for free—no account or paywall.</p></div><div class="source-indicator"><span class="tiny-pulse"></span><span id="update-status" role="status">Loading data...</span></div></div>
       <div id="demo-banner" class="demo-banner" role="status" hidden><strong>Preview mode:</strong> The records below are fictional examples, not actual city permits. The automated collector replaces them with official data after deployment.</div>
+      <noscript><p class="error-banner">Enable JavaScript to filter and export permits, or <a href="#markets">browse the market guides and official sources</a>.</p></noscript>
       <div id="error-banner" class="error-banner" role="alert" hidden></div>
       <div class="stats-grid">
         <div class="stat-card"><div>Records loaded <span class="stat-glyph">◱</span></div><strong id="stat-records">—</strong><span>In this dataset</span></div>
@@ -74,12 +76,13 @@
           <label><span>MINIMUM VALUE</span><select id="min-cost"><option value="0">Any value</option><option value="10000">$10,000+</option><option value="50000">$50,000+</option><option value="100000">$100,000+</option><option value="500000">$500,000+</option></select></label>
           <label><span>WARD</span><select id="ward"><option value="">All wards</option></select></label>
         </div>
-        <div class="result-meta"><span id="result-count">Loading records...</span><span id="sorting-label">Sorted newest first · Statewide Delaware rows are year-only; Sussex rows have issue dates</span></div>
-        <div class="table-wrap"><table><thead><tr><th>DATE / YEAR</th><th>LOCATION / DESCRIPTION</th><th>CATEGORY</th><th>REPORTED COST</th><th>SOURCE</th></tr></thead><tbody id="rows"></tbody></table></div>
+        <div class="result-meta"><span id="result-count" role="status">Loading records...</span><span id="sorting-label">Sorted newest first · Statewide Delaware rows are year-only; Sussex rows have issue dates</span></div>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Permit results table"><table><thead><tr><th>DATE / YEAR</th><th>LOCATION / DESCRIPTION</th><th>CATEGORY</th><th>REPORTED COST</th><th>SOURCE</th></tr></thead><tbody id="rows"></tbody></table></div>
         <div id="empty-state" class="empty-state" hidden>No matching permits. Adjust the filters and try again.</div>
         <div class="pagination"><button id="prev-page" class="page-button" type="button" disabled>← Previous</button><span id="page-label">Page 1</span><button id="next-page" class="page-button" type="button" disabled>Next →</button></div>
       </div>
-      <p class="small-note">Sources: <a href="https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu" target="_blank" rel="noopener noreferrer">Chicago</a>, <a href="https://opendata.dc.gov/datasets/DCGIS::building-permits-in-last-30-days" target="_blank" rel="noopener noreferrer">D.C.</a>, <a href="https://data.phila.gov/visualizations/li-building-permits/" target="_blank" rel="noopener noreferrer">Philadelphia</a>, <a href="https://stateplanning.delaware.gov/development-trends/index.shtml" target="_blank" rel="noopener noreferrer">Delaware</a>. Coverage differs by region. Delaware blends recent Sussex County permit dates with statewide annual permit-location trends. Coverage and timestamps differ. The collector may retain old data when a source fails. BuildThePulse is unaffiliated with these governments.</p>
+      <details class="small-note"><summary>Feed refresh dates (UTC)</summary><ul id="feed-freshness"></ul></details>
+      <p class="small-note">Sources: <a href="https://data.cityofchicago.org/Buildings/Building-Permits/ydr8-5enu" target="_blank" rel="noopener noreferrer">Chicago</a>, <a href="https://opendata.dc.gov/datasets/DCGIS::building-permits-in-last-30-days" target="_blank" rel="noopener noreferrer">D.C.</a>, <a href="https://data.phila.gov/visualizations/li-building-permits/" target="_blank" rel="noopener noreferrer">Philadelphia</a>, <a href="https://stateplanning.delaware.gov/development-trends/index.shtml" target="_blank" rel="noopener noreferrer">Delaware</a> and <a href="https://map.sussexcountyde.gov/trdserver/rest/services/Permit_Points/FeatureServer/0" target="_blank" rel="noopener noreferrer">Sussex County</a>. Coverage differs by region. Delaware blends recent Sussex County permit dates with statewide annual permit-location trends. Coverage and timestamps differ. The collector may retain old data when a source fails. BuildThePulse is unaffiliated with these governments.</p>
     </div></section>
 
     <section class="container market-directory" id="markets">
@@ -105,7 +108,7 @@
       <div class="free-perks">
         <article class="free-perk"><span class="perk-icon">✓</span><h3>No paywall</h3><p>Browse available government permit records across all four markets without a subscription.</p></article>
         <article class="free-perk"><span class="perk-icon">↗</span><h3>Free CSV exports</h3><p>Download filtered public records for your own analysis, subject to source limitations.</p></article>
-        <article class="free-perk"><span class="perk-icon">◷</span><h3>Data updates</h3><p>Automated public-data refreshes, with clear labels for sources that publish historical information.</p></article>
+        <article class="free-perk"><span class="perk-icon">◷</span><h3>Data updates</h3><p>Check each feed’s last successful refresh and whether its records report an issue date or a year.</p></article>
       </div>
       <div class="free-statement"><a class="button primary" href="#permits">Explore permits for free →</a><a class="button outline" href="./advertise.html">Sponsor this free resource ↗</a></div>
       <p class="small-note">Advertisements will be labeled. Advertisers cannot alter or prioritize government permit records. No sponsored company is currently endorsed or displayed as an actual advertiser.</p>
@@ -122,9 +125,10 @@
       <input type="hidden" name="requested_plan" value="not_sure">
       <label class="checkbox-label"><input type="checkbox" name="consent_to_contact" value="yes" required><span>I agree to receive occasional BuildThePulse emails about the free digest and product updates. I may unsubscribe at any time.</span></label>
       <input type="text" name="website" class="honeypot" aria-hidden="true" tabindex="-1" autocomplete="off">
-      <button class="button primary full" type="submit">Join the free updates interest list →</button>
+      <button class="button primary full" type="submit" disabled>Join the free updates interest list →</button>
       <p class="form-state" id="form-state" role="status" aria-live="polite">No payment required. This is an interest list, not a functioning automatic newsletter yet.</p>
       <p class="small-note">We store your email, trade and optional company to contact you about free updates. <a href="./privacy.html">Privacy notice</a>.</p>
+      <noscript><p>Enable JavaScript to join the interest list.</p></noscript>
     </form></section>
   </main>
   <footer><div class="container footer"><div class="brand">▥ Build<span class="brand-accent">ThePulse</span></div><p>Unofficial construction-intelligence service. Public permit records can be incomplete or delayed. Independent of the issuing agencies.</p><div class="footer-links"><a href="./advertise.html">Advertise with us</a><a href="./privacy.html">Privacy policy and Notice at Collection</a><button id="privacy-settings-button" type="button">Your Privacy Choices</button><a href="./privacy.html#rights">Privacy rights &amp; requests</a><a href="./privacy.html#cookies">Cookie information</a></div></div></footer>
@@ -135,19 +139,19 @@
   <div class="privacy-actions">
     <button id="privacy-reject" class="privacy-primary" type="button">Reject optional tracking</button>
     <button id="privacy-settings" type="button">Manage preferences</button>
-    <button id="privacy-accept" type="button">Allow anonymous analytics</button>
+    <button id="privacy-accept" type="button">Allow optional analytics</button>
     <a href="./privacy.html">Read privacy policy</a>
   </div>
 </div>
-<div id="privacy-modal" class="privacy-modal" role="dialog" aria-modal="true" aria-label="Privacy preferences" aria-hidden="true" hidden>
+<dialog id="privacy-modal" class="privacy-modal" role="dialog" aria-modal="true" aria-label="Privacy preferences" aria-hidden="true" hidden>
   <div class="privacy-modal-panel">
     <h2>Privacy preferences</h2>
     <p>You can allow or reject optional first-party aggregate audience analytics. When allowed, BuildThePulse records page views, selected markets and sponsor clicks without storing IP addresses, persistent IDs or emails in its analytics database. No third-party ad tags or session recording tools are currently installed.</p>
     <div class="privacy-setting"><input type="checkbox" checked disabled aria-label="Necessary local preference storage"><span><strong>Necessary site functions — always on</strong>Public permit browsing, normal host security logs, and local storage of this preference. No account required for browsing.</span></div>
-    <label class="privacy-setting"><input id="privacy-optional" type="checkbox"><span><strong>Optional aggregate analytics</strong>Off by default. Enabling allows anonymous pageview, market-selection and sponsor-click event counting. Global Privacy Control overrides consent. Any future cross-site ad tracking requires a separate implementation and notice.</span></label>
+    <label class="privacy-setting"><input id="privacy-optional" type="checkbox"><span><strong>Optional aggregate analytics</strong>Off by default. Enabling allows counting page views, market selections and sponsor clicks. Global Privacy Control overrides consent. Any future cross-site ad tracking requires a separate implementation and notice.</span></label>
     <p id="privacy-status" role="status"></p>
     <div class="privacy-actions"><button id="privacy-save" class="privacy-primary" type="button">Save choices</button><button id="privacy-close" type="button">Close</button><a href="./privacy.html#rights">Privacy rights</a></div>
   </div>
-</div>
+</dialog>
 </body>
 </html>

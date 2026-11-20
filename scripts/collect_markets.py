@@ -17,6 +17,7 @@ import urllib.parse
 import urllib.request
 
 from collect import ROOT, atomic_write, classify, safe_cost
+from permit_privacy import redact_contact_details
 
 DATA = ROOT / "public" / "data"
 DC = "https://maps2.dcgis.dc.gov/dcgis/rest/services/FEEDS/DCRA/FeatureServer/4"
@@ -97,7 +98,7 @@ def fetch_dc(days=30):
         if not ident or not issued or issued < cutoff or ident in seen:
             continue
         seen.add(ident)
-        desc = str(raw.get("DESC_OF_WORK") or "")[:1200]
+        desc = redact_contact_details(str(raw.get("DESC_OF_WORK") or ""))[:1200]
         typ = str(raw.get("PERMIT_TYPE_NAME") or "")
         subtype = str(raw.get("PERMIT_SUBTYPE_NAME") or "")
         result.append({
@@ -131,7 +132,7 @@ def fetch_philadelphia(days=30):
             issued = date_string(raw.get("permitissuedate"))
             if not ident or not issued:
                 continue
-            desc = str(raw.get("approvedscopeofwork") or raw.get("permitdescription") or "")[:1200]
+            desc = redact_contact_details(str(raw.get("approvedscopeofwork") or raw.get("permitdescription") or ""))[:1200]
             typ = str(raw.get("permittype") or "")
             work = str(raw.get("typeofwork") or "")
             result.append({
@@ -158,7 +159,7 @@ def fetch_delaware():
             continue
         county = str(raw.get("COUNTY") or "").strip()
         jurisdiction = str(raw.get("JURISDICTION") or "").strip()
-        notes = str(raw.get("NOTES") or "")[:400]
+        notes = redact_contact_details(str(raw.get("NOTES") or ""))[:400]
         residential = str(raw.get("R_NR") or "").strip()
         desc = " / ".join(filter(None, [notes, "Residential" if residential.upper().startswith("R") else "Nonresidential" if residential else ""]))
         result.append({

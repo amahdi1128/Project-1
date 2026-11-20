@@ -26,7 +26,7 @@ Collectors: `scripts/collect.py`, `scripts/collect_markets.py`, `scripts/collect
 ## Audience measurement (privacy-conscious and free-tier)
 
 - `public/growth.js` records `page_view`, `market_select` and `sponsor_click` events only after the visitor consents.
-- Global Privacy Control / Do Not Track are treated as an opt-out. Previous experimental privacy preferences are not reused as permission for analytics; a new v2 preference is required.
+- Global Privacy Control / Do Not Track are treated as an opt-out. Previous experimental privacy preferences are not reused as permission for analytics; a new v3 preference is required.
 - Event rows contain **event type, market, page category, sponsor placement and timestamp**, with no visitor identifier, IP address, user agent, referrer or email in the analytics table.
 - This measures **consenting event counts, not unique visitors, impressions delivered by Google, or guaranteed advertiser conversions**. Host infrastructure may separately log IP information.
 - Data is stored privately in `public.buildthepulse_analytics_events`. Use `reporting/metrics.sql` in the Supabase SQL editor for private reports.
@@ -38,7 +38,7 @@ Collectors: `scripts/collect.py`, `scripts/collect_markets.py`, `scripts/collect
 - `public/index.html`, `public/app.js` — free-update interest list (no current automated emails).
 - `supabase/functions/buildthepulse-growth/index.ts` — validated sponsor inquiry and analytics endpoint.
 - `supabase/functions/buildpulse-waitlist/index.ts` — free-update interest endpoint.
-- Private tables: `buildthepulse_sponsor_inquiries`, `buildthepulse_analytics_events`, `buildpulse_waitlist`, `buildthepulse_privacy_requests`. RLS is enabled and anonymous table permissions are revoked. No database secrets are published to JavaScript or GitHub.
+- Private tables: `buildthepulse_sponsor_inquiries`, `buildthepulse_analytics_events`, `buildpulse_waitlist`, `buildthepulse_privacy_requests`. The waitlist SQL enables RLS and revokes anonymous table permissions. Verify the deployed grants and policies for every submission table before relying on them. No database secrets are published to JavaScript or GitHub.
 - The sponsor form is a request for information **not a purchase contract**. Leads are available in Supabase Table Editor; no CRM notifications or outbound sales sequences are running automatically.
 
 ## Local testing

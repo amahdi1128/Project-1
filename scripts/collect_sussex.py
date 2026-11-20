@@ -16,6 +16,7 @@ import time
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from collect import atomic_write, classify, safe_cost, ROOT
 from collect_markets import date_string, get_json
+from permit_privacy import redact_contact_details
 
 BASE = "https://map.sussexcountyde.gov/trdserver/rest/services/Permit_Points/FeatureServer/0/query"
 SOURCE = "https://map.sussexcountyde.gov/trdserver/rest/services/Permit_Points/FeatureServer/0"
@@ -47,11 +48,12 @@ def collect(days: int = 45, limit: int = 15000):
             ident = str(row.get("pt_a_permit_no") or row.get("OBJECTID") or "").strip()
             if not ident or ident in results:
                 continue
-            desc = " ".join(filter(None, [
+            description_parts = [
                 str(row.get("h_description1") or "").strip(),
                 str(row.get("h_description2") or "").strip(),
                 str(row.get("a_project_desc") or "").strip(),
-            ]))[:1200]
+            ]
+            desc = redact_contact_details(" ".join(filter(None, description_parts)))[:1200]
             kind = str(row.get("pt_a_type_desc") or row.get("pt_a_permit_type") or "")
             parcel = str(row.get("a_parcel_id") or "").strip()
             results[ident] = {

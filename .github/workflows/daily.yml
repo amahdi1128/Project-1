@@ -5,11 +5,13 @@ on:
     - cron: '18 13 * * *'
   workflow_dispatch:
   push:
+    branches: [main]
     paths:
       - '.github/workflows/daily.yml'
       - 'scripts/collect.py'
       - 'scripts/collect_markets.py'
       - 'scripts/collect_sussex.py'
+      - 'scripts/permit_privacy.py'
       - 'tests/test_collect.py'
 
 permissions:
@@ -21,6 +23,7 @@ concurrency:
 
 jobs:
   refresh:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

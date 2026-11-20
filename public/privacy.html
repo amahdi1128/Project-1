@@ -23,19 +23,20 @@
 .rights-form button:disabled{opacity:.5}
 </style>
 <script src="./privacy-request.js" defer></script></head><body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
 <header class="site-header"><div class="container nav-bar">
 <a class="brand" href="./index.html"><span class="brand-mark">▥</span> Build<span class="brand-accent">ThePulse</span><span class="brand-city">NORTH AMERICA</span></a>
-<nav aria-label="Main navigation"><a href="./index.html#permits">Explore permits</a><a href="./index.html#free">Free access</a><a href="./advertise.html">Advertise</a></nav>
-<a class="nav-cta" href="./index.html#privacy-choices">Privacy settings</a>
+<nav aria-label="Main navigation"><a href="./#permits">Explore permits</a><a href="./index.html#free">Free access</a><a href="./advertise.html">Advertise</a></nav>
+<a class="nav-cta" href="./#privacy-choices">Privacy settings</a>
 </div></header>
-<main class="container policy">
+<main class="container policy" id="main-content" tabindex="-1">
 <span class="overline">PRIVACY &amp; TRANSPARENCY</span>
 <h1>Privacy Policy and Notice at Collection</h1>
-<p><strong>Effective:</strong> November 19, 2026. <strong>Operator:</strong> BuildThePulse, an early-stage independent project. <strong>Site:</strong> <a href="https://buildthepulse.onrender.com/">buildthepulse.onrender.com</a>.</p>
+<p><strong>Effective:</strong> November 20, 2026. <strong>Operator:</strong> BuildThePulse, an early-stage independent project. <strong>Site:</strong> <a href="https://buildthepulse.onrender.com/">buildthepulse.onrender.com</a>.</p>
 <div class="privacy-information"><strong>Important:</strong> This policy describes the current prototype; it is not a representation that BuildThePulse meets every law that could apply to a future commercial service. Applicability of CCPA/CPRA, California Invasion of Privacy Act (CIPA), Delaware Personal Data Privacy Act, Colorado Privacy Act, Virginia CDPA, Connecticut Data Privacy Act, Canadian privacy laws, and other rules depends on facts including business size, jurisdiction, users, and actual data processing. Review this notice and the implementation with qualified counsel as advertising or other tracking systems evolve.</div>
 <div class="policy-nav"><a href="#collection">What we collect</a><a href="#cookies">Cookies &amp; tracking</a><a href="#rights">Privacy rights</a><a href="#requests">Submit a request</a><a href="#providers">Service providers</a></div>
 <section id="collection"><h2>1. Information we collect and the purposes</h2>
-<p><strong>Public permit data:</strong> The public dashboard republishes selected construction-permit information from government sources (permit identifiers, publicly reported project locations, descriptions, costs when available, dates or years, and market categories). It intentionally excludes applicant names, applicant email addresses and phone numbers from its collected feeds. Some published project locations may nonetheless relate to residences. Our uses are public construction-market research, search, filtering, and data export.</p>
+<p><strong>Public permit data:</strong> The public dashboard republishes selected construction-permit information from government sources (permit identifiers, publicly reported project locations, descriptions, costs when available, dates or years, and market categories). We omit dedicated applicant and contact fields and filter recognizable email addresses and phone numbers from project descriptions. Published locations may include residential addresses or parcel identifiers. Free-text source records can contain incidental information. Use the form below to ask us to review or correct a record on this site. Our uses are public construction-market research, search, filtering, and data export.</p>
 <p><strong>Information you voluntarily submit:</strong> If you join the free-updates interest list, we collect your work email, trade, optional company name, contact consent and submission timestamp so we can notify you about the planned free industry digest; no automated digest is currently sent. Existing stored research records may also contain historical price-interest or pilot-interest fields from our earlier prototype. If you request sponsorship information, we collect company and contact names, work email, optional business website, market, sponsorship format, estimated budget, notes, consent and timestamp. If you submit a privacy-rights request, we collect the email address, request category, optional jurisdiction and details, and processing status. We do not currently collect payment-card details or operate checkout.</p>
 <p><strong>Technical and aggregate analytics data:</strong> Render and Supabase may process IP address, request time, browser/user-agent details and technical security/error logs to deliver and protect the site. With your opt-in consent (and absent a conflicting Global Privacy Control preference), our first-party analytics function records only event type (page view, market selection, or sponsor click), page category, market, optional sponsor placement and timestamp. It does not store email addresses, IP addresses, visitor IDs, referrer URLs or browser fingerprints in its analytics table. Because events have no visitor identifier, statistics cannot reliably report unique visitors and individual aggregate events cannot be attributed back to a person for deletion. We currently have no third-party advertising pixel, Google AdSense tag, session replay or cross-site audience profiling installed.</p>
 <p><strong>Information sources:</strong> You directly, public government permit feeds, and standard service infrastructure. We do not knowingly buy personal profiles from data brokers.</p>
@@ -46,13 +47,13 @@
 <p>We may disclose necessary data to service providers solely to operate the application, process sponsor and subscriber inquiries and maintain security, or when lawfully compelled. We do not post subscriber or sponsor submissions or privacy requests in the public GitHub repository.</p>
 </section>
 <section id="cookies"><h2>3. Cookies, local storage, and CIPA-related technologies</h2>
-<p><strong>Current deployment:</strong> Optional first-party, aggregate audience analytics runs only after you choose to allow it. The site stores the preference in your browser using local storage (<code>buildthepulse_privacy_choice_v2</code>) and sends pageview, market-selection and sponsor-click counts through our Supabase function; it does not create persistent analytics cookies or unique visitor identifiers. The site uses contextual, clearly labeled sponsor placements which do not require analytics consent. No Google advertising network, third-party analytics pixel, session-recording, call-recording or chat interception script is currently installed. The public explorer works without an account. Infrastructure providers may use technical security or delivery technologies outside our application code.</p>
+<p><strong>Current deployment:</strong> Optional first-party, aggregate audience analytics runs only after you choose to allow it. The site stores the preference in your browser using local storage (<code>buildthepulse_privacy_choice_v3</code>) and sends pageview, market-selection and sponsor-click counts through our Supabase function; it does not create persistent analytics cookies or unique visitor identifiers. The site uses contextual, clearly labeled sponsor placements which do not require analytics consent. No Google advertising network, third-party analytics pixel, session-recording, call-recording or chat interception script is currently installed. The public explorer works without an account. Infrastructure providers may use technical security or delivery technologies outside our application code.</p>
 <p>Before we introduce Google AdSense or other third-party advertising cookies, pixels, replay SDKs, cross-site tracking, or communication-monitoring tools, we will update this notice, conduct an applicable consent and CIPA/wiretapping-law review, and implement actual pre-consent blocking where required. We do not treat merely displaying this banner as permission to intercept visitor communications.</p>
-<p>Use <a href="./index.html#privacy-choices">Your Privacy Choices</a> to reject optional technologies or adjust your locally stored preference. The site honors supported <strong>Global Privacy Control</strong> signals by refusing optional tracking; Do Not Track is also treated conservatively as an opt-out. Browser or device settings can be used to delete stored preferences, block cookies or clear site data. The consent control can be reopened from the footer.</p>
+<p>Use <a href="./#privacy-choices">Your Privacy Choices</a> to reject optional technologies or adjust your locally stored preference. The site honors supported <strong>Global Privacy Control</strong> signals by refusing optional tracking; Do Not Track is also treated conservatively as an opt-out. Browser or device settings can be used to delete stored preferences, block cookies or clear site data. The consent control can be reopened from the footer.</p>
 </section>
 <section id="providers"><h2>4. Service providers, transfers and security</h2>
 <p>GitHub provides code and publicly published municipal-data hosting; Render hosts the static website; Supabase hosts restricted databases and server-side submission functions. We use these providers for infrastructure, not for selling customer data. They may process technical information and transfer it internationally under their own terms. The current project uses U.S.-region Supabase hosting, and service access may occur across borders. Some externally linked government sites have independent privacy and cookie practices that we do not control.</p>
-<p>Database tables for free-updates signups, sponsor inquiries, aggregate analytics and rights requests have row-level security enabled, no public read access, and restricted server-side writes. We use HTTPS and do not put privileged database keys in browser code. No system can guarantee perfect security; suspected incidents will be investigated and notifications issued as required by applicable law.</p>
+<p>The site submits free-updates signups, sponsorship inquiries, audience events and privacy requests through server-side functions. We use HTTPS and do not put privileged database keys in browser code. No system can guarantee perfect security; suspected incidents will be investigated and notifications issued as required by applicable law.</p>
 </section>
 <section id="rights"><h2>5. Consumer rights — California and other jurisdictions</h2>
 <p>Depending on your residency and whether the relevant law applies to this project, you may have rights to know/access information, obtain copies, correct inaccuracies, delete information, opt out of sale or sharing/targeted advertising, limit certain sensitive-data uses, withdraw consent, appeal certain decisions, and be free from unlawful discrimination for exercising rights. California privacy laws may also require disclosure of categories collected, sources, purposes, retention and recipient categories, and recognition of opt-out preference signals. We currently do not sell or share information for targeted advertising, so no such processing is presently conducted.</p>
@@ -62,7 +63,7 @@
 </section>
 <section id="requests"><h2>6. Submit a privacy rights request</h2>
 <p>You may submit a request to access, correct or delete data, opt out, or raise another privacy concern using this private request form. It is not a public comment board. We will assess the request, verify identity when needed, and respond in accordance with applicable timelines. An automated on-screen acknowledgment only means the request was stored, not that identity verification or substantive processing has been completed.</p>
-<form id="privacy-request-form" class="rights-form">
+<form id="privacy-request-form" method="post" class="rights-form">
 <label>Email address for response <input type="email" name="email" maxlength="254" autocomplete="email" required></label>
 <label>Request type <select name="request_type" required>
 <option value="access">Access / know / portability</option>
@@ -70,15 +71,16 @@
 <option value="correct">Correct personal information</option>
 <option value="opt_out">Opt out of sale, sharing or targeted advertising</option>
 <option value="limit">Limit sensitive information processing</option>
-<option value="other">Other privacy inquiry / appeal</option>
+<option value="other">Other inquiry, appeal, or permit correction</option>
 </select></label>
 <label>State, province or country (optional) <input type="text" name="jurisdiction" maxlength="80" placeholder="e.g., California"></label>
 <label>Additional details (optional; do not include sensitive information) <textarea name="details" maxlength="1000" placeholder="Briefly describe your request"></textarea></label>
 <input type="text" class="honeypot" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-<button type="submit">Submit privacy request</button>
+<button type="submit" disabled>Submit privacy request</button>
+<noscript><p>Enable JavaScript to submit a privacy request.</p></noscript>
 <p id="privacy-request-status" role="status" aria-live="polite"></p>
 </form>
-<p>For concerns about public permit-record accuracy, please use the corresponding municipal data source; BuildThePulse does not issue or amend government permits.</p>
+<p>To report a permit as displayed here, choose “Other inquiry, appeal, or permit correction” and include the market and permit number. For corrections to the original record, contact the issuing agency.</p>
 </section>
 <section id="other"><h2>7. Children, changes and contact</h2>
 <p>The product is intended for business users, not children under 16. We do not knowingly solicit information from children. If we learn we received such a submission, we will investigate and delete it as appropriate.</p>
@@ -87,5 +89,5 @@
 </section>
 <p><a href="./index.html">← Back to BuildThePulse</a> · <a href="./advertise.html">Advertise with BuildThePulse</a></p>
 </main>
-<footer><div class="container footer"><div class="brand">▥ Build<span class="brand-accent">ThePulse</span></div><p>Independent construction intelligence. Sources and data accuracy vary by jurisdiction.</p><div class="footer-links"><a href="./index.html#privacy-choices">Your Privacy Choices</a><a href="#rights">Privacy rights</a><a href="#collection">Notice at Collection</a></div></div></footer>
+<footer><div class="container footer"><div class="brand">▥ Build<span class="brand-accent">ThePulse</span></div><p>Independent construction intelligence. Sources and data accuracy vary by jurisdiction.</p><div class="footer-links"><a href="./#privacy-choices">Your Privacy Choices</a><a href="#rights">Privacy rights</a><a href="#collection">Notice at Collection</a></div></div></footer>
 </body></html>
