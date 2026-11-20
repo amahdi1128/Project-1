@@ -16,6 +16,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+from permit_privacy import redact_contact_details
+
 BASE = 'https://data.cityofchicago.org/resource/ydr8-5enu.json'
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'public' / 'data' / 'permits.json'
@@ -54,7 +56,7 @@ def normalize(raw: dict) -> dict | None:
     issue = str(raw.get('issue_date') or '')[:10]
     if not ident or not re.fullmatch(r'\d{4}-\d{2}-\d{2}', issue):
         return None
-    work = str(raw.get('work_description') or '').strip()
+    work = redact_contact_details(str(raw.get('work_description') or '').strip())
     address = ' '.join(str(raw.get(k) or '').strip() for k in ('street_number', 'street_direction', 'street_name'))
     address = re.sub(r'\s+', ' ', address).strip()
     return {

@@ -41,4 +41,5 @@ document.addEventListener('DOMContentLoaded',()=>{
         String(error.message||error)+')';
     }finally{clearTimeout(timer);button.disabled=false;}
   });
+  form.querySelector('button[type=submit]').disabled = false;
 });
